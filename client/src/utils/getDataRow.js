@@ -106,39 +106,57 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 					baseObjectData.getElementsByTagName("ID").length > 0
 						? baseObjectData.getElementsByTagName("ID")[0].textContent
 						: "";
-				console.log("Assigned EIDR ID:", value); // Debugging log
 				row.push(value);
 			} else if (key === "Edit Details 1") {
-				const editDetailsElement =
-					baseObjectData.getElementsByTagName("EditDetails")[0];
-				const domain = editDetailsElement
-					? editDetailsElement.getAttribute("domain")
-					: "";
-				const value = editDetailsElement ? editDetailsElement.textContent : "";
-				row.push(value);
-				row.push(domain); // Add domain to the row
+				if (baseObjectData.getElementsByTagName("EditDetails").length > 0) {
+					const editDetailsElement =
+						baseObjectData.getElementsByTagName("EditDetails")[0];
+					const domain = editDetailsElement
+						? editDetailsElement.getAttribute("domain")
+						: "";
+					const value = editDetailsElement
+						? editDetailsElement.textContent
+						: "";
+					row.push(value);
+					row.push(domain); // Add domain to the row
+				} else {
+					row.push("");
+					row.push("");
+				}
 			} else if (key === "Version Language 1") {
-				const versionLanguageElement =
-					baseObjectData.getElementsByTagName("VersionLanguage")[0];
-				const mode = versionLanguageElement
-					? versionLanguageElement.getAttribute("mode")
-					: "";
-				const value = versionLanguageElement
-					? versionLanguageElement.textContent
-					: "";
-				row.push(value);
-				row.push(mode);
+				if (baseObjectData.getElementsByTagName("VersionLanguage").length > 0) {
+					const versionLanguageElement =
+						baseObjectData.getElementsByTagName("VersionLanguage")[0];
+					const mode = versionLanguageElement
+						? versionLanguageElement.getAttribute("mode")
+						: "";
+					const value = versionLanguageElement
+						? versionLanguageElement.textContent
+						: "";
+					row.push(value);
+					row.push(mode);
+				} else {
+					row.push("");
+					row.push("");
+				}
 			} else if (key === "Original Language 1") {
-				const originalLanguageElement =
-					baseObjectData.getElementsByTagName("OriginalLanguage")[0];
-				const mode = originalLanguageElement
-					? originalLanguageElement.getAttribute("mode")
-					: "";
-				const value = originalLanguageElement
-					? originalLanguageElement.textContent
-					: "";
-				row.push(value);
-				row.push(mode);
+				if (
+					baseObjectData.getElementsByTagName("OriginalLanguage").length > 0
+				) {
+					const originalLanguageElement =
+						baseObjectData.getElementsByTagName("OriginalLanguage")[0];
+					const mode = originalLanguageElement
+						? originalLanguageElement.getAttribute("mode")
+						: "";
+					const value = originalLanguageElement
+						? originalLanguageElement.textContent
+						: "";
+					row.push(value);
+					row.push(mode);
+				} else {
+					row.push("");
+					row.push("");
+				}
 			} else if (key === "Title") {
 				if (baseObjectData.getElementsByTagName("ResourceName").length > 0) {
 					const titleElement =
@@ -160,6 +178,10 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 						row.push("");
 						row.push("");
 					}
+				} else {
+					row.push("");
+					row.push("");
+					row.push("");
 				}
 			} else if (key === "Associated Org 1") {
 				if (baseObjectData.getElementsByTagName("AssociatedOrg").length > 0) {
