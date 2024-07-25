@@ -17,7 +17,9 @@ function GenerateFileInput({ setSearchType, makeQuery, onLoading }) {
 			const reader = new FileReader();
 			reader.onload = (e) => {
 				const fileContent = e.target.result;
-				const inputsArr = fileContent.split("\n");
+				const inputsArr = fileContent
+					.split("\n")
+					.filter((item) => item.trim() !== "");
 				setSearchType("byEidrId");
 				const jobs = [];
 				const jobsSize = inputsArr.length / 1000;
