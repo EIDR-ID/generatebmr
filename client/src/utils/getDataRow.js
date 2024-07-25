@@ -1,4 +1,5 @@
 import excelToXMLMap from "../components/ExcelToXMLMap.js";
+import isAttributeKey from "./isAttributeKey.js";
 
 const getDataRow = (xmlDoc, dataKeys, idx) => {
 	const baseElements = xmlDoc.getElementsByTagName("SelfDefinedMetadata");
@@ -107,12 +108,132 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 						: "";
 				console.log("Assigned EIDR ID:", value); // Debugging log
 				row.push(value);
+			} else if (key === "Edit Details 1") {
+				const editDetailsElement =
+					baseObjectData.getElementsByTagName("EditDetails")[0];
+				const domain = editDetailsElement
+					? editDetailsElement.getAttribute("domain")
+					: "";
+				const value = editDetailsElement ? editDetailsElement.textContent : "";
+				row.push(value);
+				row.push(domain); // Add domain to the row
+			} else if (key === "Version Language 1") {
+				const versionLanguageElement =
+					baseObjectData.getElementsByTagName("VersionLanguage")[0];
+				const mode = versionLanguageElement
+					? versionLanguageElement.getAttribute("mode")
+					: "";
+				const value = versionLanguageElement
+					? versionLanguageElement.textContent
+					: "";
+				row.push(value);
+				row.push(mode);
+			} else if (key === "Original Language 1") {
+				const originalLanguageElement =
+					baseObjectData.getElementsByTagName("OriginalLanguage")[0];
+				const mode = originalLanguageElement
+					? originalLanguageElement.getAttribute("mode")
+					: "";
+				const value = originalLanguageElement
+					? originalLanguageElement.textContent
+					: "";
+				row.push(value);
+				row.push(mode);
+			} else if (key === "Title") {
+				const titleElement =
+					baseObjectData.getElementsByTagName("ResourceName")[0];
+				const systemGenerated = titleElement.getAttribute("systemGenerated");
+				if (systemGenerated !== "true") {
+					const language = titleElement
+						? titleElement.getAttribute("lang")
+						: "";
+					const titleClass = titleElement
+						? titleElement.getAttribute("titleClass")
+						: "";
+					const value = titleElement ? titleElement.textContent : "";
+					row.push(value);
+					row.push(language);
+					row.push(titleClass);
+				} else {
+					row.push("");
+					row.push("");
+					row.push("");
+				}
+			} else if (key === "Associated Org 1") {
+				if (baseObjectData.getElementsByTagName("AssociatedOrg").length > 0) {
+					const associatedOrgElement =
+						baseObjectData.getElementsByTagName("AssociatedOrg")[0];
+					const value = associatedOrgElement
+						? associatedOrgElement.getElementsByTagName("md:DisplayName")[0]
+								.textContent
+						: "";
+					const role = associatedOrgElement
+						? associatedOrgElement.getAttribute("role")
+						: "";
+					const idType = associatedOrgElement
+						? associatedOrgElement.getAttribute("idType")
+						: "";
+					row.push(value);
+					row.push(role);
+					row.push(idType);
+				} else {
+					row.push("");
+					row.push("");
+					row.push("");
+				}
+			} else if (key === "Associated Org 2") {
+				if (baseObjectData.getElementsByTagName("AssociatedOrg").length > 1) {
+					const associatedOrgElement =
+						baseObjectData.getElementsByTagName("AssociatedOrg")[1];
+					const value = associatedOrgElement
+						? associatedOrgElement.getElementsByTagName("md:DisplayName")[0]
+								.textContent
+						: "";
+					const role = associatedOrgElement
+						? associatedOrgElement.getAttribute("role")
+						: "";
+					const idType = associatedOrgElement
+						? associatedOrgElement.getAttribute("idType")
+						: "";
+					row.push(value);
+					row.push(role);
+					row.push(idType);
+				} else {
+					row.push("");
+					row.push("");
+					row.push("");
+				}
+			} else if (key === "Associated Org 3") {
+				if (baseObjectData.getElementsByTagName("AssociatedOrg").length > 2) {
+					const associatedOrgElement =
+						baseObjectData.getElementsByTagName("AssociatedOrg")[2];
+					const value = associatedOrgElement
+						? associatedOrgElement.getElementsByTagName("md:DisplayName")[0]
+								.textContent
+						: "";
+					const role = associatedOrgElement
+						? associatedOrgElement.getAttribute("role")
+						: "";
+					const idType = associatedOrgElement
+						? associatedOrgElement.getAttribute("idType")
+						: "";
+					row.push(value);
+					row.push(role);
+					row.push(idType);
+				} else {
+					row.push("");
+					row.push("");
+					row.push("");
+				}
 			} else {
 				if (foundElements.length > 0) {
 					value = foundElements[0].textContent || "";
 					row.push(value);
 				} else {
-					row.push(""); // Push an empty string if the element was not found
+					console.log(key, "not found in XML"); // Debugging log
+					if (!isAttributeKey(key)) {
+						row.push(""); // Push an empty string if the element was not found
+					}
 				}
 			}
 		});

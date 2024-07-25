@@ -27,11 +27,17 @@ const determineFormatType = (xmlDoc) => {
 				"CompilationInfo",
 				"EpisodeInfo",
 			];
-			const hasNonEpisodicTags = tags.some(
+			const hasNonEpisodicTags = tags.every(
 				(tag) => extraObjectMetadata.getElementsByTagName(tag).length === 0
 			);
 			if (hasNonEpisodicTags) {
 				return "NonEpisodic";
+			} else {
+				if (
+					extraObjectMetadata.getElementsByTagName("EpisodeInfo").length > 0
+				) {
+					return "Episodic";
+				}
 			}
 		}
 	}
