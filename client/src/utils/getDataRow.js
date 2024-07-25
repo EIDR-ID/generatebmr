@@ -140,24 +140,26 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 				row.push(value);
 				row.push(mode);
 			} else if (key === "Title") {
-				const titleElement =
-					baseObjectData.getElementsByTagName("ResourceName")[0];
-				const systemGenerated = titleElement.getAttribute("systemGenerated");
-				if (systemGenerated !== "true") {
-					const language = titleElement
-						? titleElement.getAttribute("lang")
-						: "";
-					const titleClass = titleElement
-						? titleElement.getAttribute("titleClass")
-						: "";
-					const value = titleElement ? titleElement.textContent : "";
-					row.push(value);
-					row.push(language);
-					row.push(titleClass);
-				} else {
-					row.push("");
-					row.push("");
-					row.push("");
+				if (baseObjectData.getElementsByTagName("ResourceName").length > 0) {
+					const titleElement =
+						baseObjectData.getElementsByTagName("ResourceName")[0];
+					const systemGenerated = titleElement.getAttribute("systemGenerated");
+					if (systemGenerated !== "true") {
+						const language = titleElement
+							? titleElement.getAttribute("lang")
+							: "";
+						const titleClass = titleElement
+							? titleElement.getAttribute("titleClass")
+							: "";
+						const value = titleElement ? titleElement.textContent : "";
+						row.push(value);
+						row.push(language);
+						row.push(titleClass);
+					} else {
+						row.push("");
+						row.push("");
+						row.push("");
+					}
 				}
 			} else if (key === "Associated Org 1") {
 				if (baseObjectData.getElementsByTagName("AssociatedOrg").length > 0) {
