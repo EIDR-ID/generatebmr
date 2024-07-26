@@ -45,12 +45,11 @@ const GenerateFormInput = ({
 							key={index}
 						>
 							<div>
-								<label className='text-xl font-bold mr-2'>{category}</label>
 								<textarea
 									type='text'
 									name={category}
 									value={value}
-									placeholder='Input this attribute...'
+									placeholder='Input EIDR IDs...'
 									onChange={handleChange}
 									className='font-poppins border-2 border-gray-300 p-2 h-96 w-96'
 								/>

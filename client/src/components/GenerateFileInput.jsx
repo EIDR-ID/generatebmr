@@ -43,10 +43,7 @@ function GenerateFileInput({ setSearchType, makeQuery, onLoading }) {
 
 	return (
 		<div className='flex flex-col items-center justify-center'>
-			<label className='text-xl font-bold mr-2 bg-gray-300 text-lg rounded-lg mb-2 mt-5'>
-				Upload a file
-			</label>
-			<div className='flex items-center bg-white py-2 shadow-md rounded-lg'>
+			<div className='flex items-center bg-white py-2 shadow-md rounded-lg mt-5'>
 				<input
 					type='file'
 					accept='.txt'

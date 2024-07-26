@@ -46,10 +46,6 @@ export const generateDataConfig = (
 			{
 				name: "Unknown",
 				list: unknownList,
-				hasTemplate: hasUnknown,
-				xmlArray: unknownXML,
-				buttonName: "Unknown",
-				templateFormat: unknowntemplate,
 			},
 			{
 				name: "Error",

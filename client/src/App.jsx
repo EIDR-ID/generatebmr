@@ -109,13 +109,11 @@ const App = () => {
 			<h1 className='text-4xl font-bold text-center mb-4'>
 				BMR Template Generator
 			</h1>
-			<h2 className='text-2xl font-bold mb-10'>Enter the information:</h2>
-			<h2 className='text-2xl font-bold mb-1'>Select search type:</h2>
 			<button
 				onClick={handleFormChange}
 				className='text-white bg-black rounded-lg shadow-lg p-2 mt-4 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110'
 			>
-				Switch Search Mode
+				{isForm ? "Switch to File Mode" : "Switch to Text Mode"}
 			</button>
 			<div className='flex'>
 				{isForm ? (
