@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import GenerateFormInput from "./components/GenerateFormInput";
 import determineFormatType from "./utils/determineFormatType";
@@ -32,7 +32,27 @@ const App = () => {
 	const [hasUnknown, setHasUnknown] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [isForm, setIsForm] = useState(true);
-	const dataConfig = generateDataConfig(
+	const [dataConfig, setDataConfig] = useState({ sections: [] });
+
+	useEffect(() => {
+		setDataConfig(
+			generateDataConfig(
+				episodicList,
+				hasEpisodic,
+				episodicXML,
+				nonEpisodicList,
+				hasNonEpisodic,
+				nonEpisodicXML,
+				editEIDRList,
+				hasEditFormat,
+				editXML,
+				unknownList,
+				hasUnknown,
+				unknownXML,
+				eidrErrorList
+			)
+		);
+	}, [
 		episodicList,
 		hasEpisodic,
 		episodicXML,
@@ -45,8 +65,8 @@ const App = () => {
 		unknownList,
 		hasUnknown,
 		unknownXML,
-		eidrErrorList
-	);
+		eidrErrorList,
+	]);
 
 	const handleLoading = (bool) => {
 		setLoading(bool);
@@ -93,7 +113,7 @@ const App = () => {
 			body: JSON.stringify({ eidr_id: eidrId }),
 		};
 		callAPI(query, requestOptions, eidrId).catch((error) => {
-			console.error("Error:", error);
+			console.error("Error right here ", eidrId, ": ", error);
 			setEidrErrorList((prev) => [...prev, eidrId]);
 		});
 	};
@@ -138,7 +158,7 @@ const App = () => {
 				)}
 			</div>
 
-			<GeneratedTable dataConfig={dataConfig} />
+			{!loading && <GeneratedTable dataConfig={dataConfig} />}
 			{loading && <LoadingModal modalIsOpen={loading} />}
 			<br></br>
 		</div>
