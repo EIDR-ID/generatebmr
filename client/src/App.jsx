@@ -113,6 +113,7 @@ const App = () => {
 			body: JSON.stringify({ eidr_id: eidrId }),
 		};
 		callAPI(query, requestOptions, eidrId).catch((error) => {
+			console.error("Error at  ", eidrId, ": ", error);
 			setEidrErrorList((prev) => [...prev, eidrId]);
 		});
 	};
