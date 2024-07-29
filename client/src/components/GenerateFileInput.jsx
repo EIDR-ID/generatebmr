@@ -19,12 +19,18 @@ function GenerateFileInput({ setSearchType, makeQuery, onLoading }) {
 				const fileContent = e.target.result;
 				const inputsArr = fileContent
 					.split("\n")
-					.filter((item) => item.trim() !== "");
+					.filter((item) => item.trim() !== "")
+					.map((item) => item.trim());
+				console.log("Length before: ", inputsArr.length);
+
+				const dedupInputsArr = [...new Set(inputsArr)];
+				console.log("Length after (dupes removed): ", dedupInputsArr.length); // You only need one of the record.
+
 				setSearchType("byEidrId");
 				const jobs = [];
-				const jobsSize = inputsArr.length / 1000;
+				const jobsSize = dedupInputsArr.length / 1000;
 				for (let i = 0; i < jobsSize; i++) {
-					jobs.push(inputsArr.slice(i * 1000, (i + 1) * 1000));
+					jobs.push(dedupInputsArr.slice(i * 1000, (i + 1) * 1000));
 				}
 				jobs.forEach((job, index) => {
 					setTimeout(() => {

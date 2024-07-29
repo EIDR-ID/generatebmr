@@ -1,23 +1,41 @@
-const determineFormatType = (xmlDoc) => {
-	const baseObjectDatas = xmlDoc.getElementsByTagName("BaseObjectData");
+const getReferentType = (baseObjectDatas) => {
 	if (baseObjectDatas.length > 0) {
 		const baseObjectData = baseObjectDatas[0];
 		const referentTypes = baseObjectData.getElementsByTagName("ReferentType");
 		if (referentTypes.length > 0) {
 			const referentType = referentTypes[0].textContent;
-			if (referentType === "Series" || referentType === "Season") {
-				return "Episodic";
-			}
+			return referentType;
 		}
 	}
+	return null;
+};
 
+const determineFormatType = (xmlDoc) => {
+	const baseObjectDatas = xmlDoc.getElementsByTagName("BaseObjectData");
 	const extraObjectMetadatas = xmlDoc.getElementsByTagName(
 		"ExtraObjectMetadata"
 	);
+	if (baseObjectDatas.length === 0 && extraObjectMetadatas.length === 0) {
+		return "Unknown";
+	}
+	const referentType = getReferentType(baseObjectDatas);
+	if (referentType) {
+		if (referentType === "Series" || referentType === "Season") {
+			return "Episodic";
+		}
+	}
+
+	if (extraObjectMetadatas.length == 0) {
+		return "NonEpisodic";
+	}
 	if (extraObjectMetadatas.length > 0) {
 		const extraObjectMetadata = extraObjectMetadatas[0];
 		if (extraObjectMetadata.getElementsByTagName("EditInfo").length > 0) {
 			return "Edit";
+		} else if (
+			extraObjectMetadata.getElementsByTagName("EpisodeInfo").length > 0
+		) {
+			return "Episodic";
 		} else {
 			const tags = [
 				"SeriesInfo",
@@ -27,17 +45,17 @@ const determineFormatType = (xmlDoc) => {
 				"CompilationInfo",
 				"EpisodeInfo",
 			];
-			const hasNonEpisodicTags = tags.every(
-				(tag) => extraObjectMetadata.getElementsByTagName(tag).length === 0
-			);
+			let hasNonEpisodicTags = true;
+			for (let tag in tags) {
+				const tagNames = extraObjectMetadata.getElementsByTagName(tag);
+				if (tagNames.length > 0) {
+					console.log(tagNames[0].textContent);
+					hasNonEpisodicTags = false;
+					break;
+				}
+			}
 			if (hasNonEpisodicTags) {
 				return "NonEpisodic";
-			} else {
-				if (
-					extraObjectMetadata.getElementsByTagName("EpisodeInfo").length > 0
-				) {
-					return "Episodic";
-				}
 			}
 		}
 	}
