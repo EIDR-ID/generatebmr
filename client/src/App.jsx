@@ -6,6 +6,8 @@ import GeneratedTable from "./components/GeneratedTable";
 import GenerateFileInput from "./components/GenerateFileInput";
 import { generateDataConfig } from "./utils/generateDataConfig";
 import LoadingModal from "./components/LoadingModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWarning } from "@fortawesome/free-solid-svg-icons";
 
 const App = () => {
 	const [inputs, setInputs] = useState({
@@ -33,6 +35,7 @@ const App = () => {
 	const [loading, setLoading] = useState(false);
 	const [isForm, setIsForm] = useState(true);
 	const [dataConfig, setDataConfig] = useState({ sections: [] });
+	const [selectedOption, setSelectedOption] = useState("");
 
 	useEffect(() => {
 		setDataConfig(
@@ -74,6 +77,22 @@ const App = () => {
 	const handleFormChange = () => {
 		setIsForm((prev) => !prev);
 	};
+	const handleOptionChange = (event) => {
+		setEpisodicList([]);
+		setHasEpisodic(false);
+		setEpisodicXML([]);
+		setNonEpisodicList([]);
+		setHasNonEpisodic(false);
+		setNonEpisodicXML([]);
+		setEditEIDRList([]);
+		setHasEditFormat(false);
+		setEditXML([]);
+		setUnknownList([]);
+		setHasUnknown(false);
+		setUnknownXML([]);
+		setEidrErrorList([]);
+		setSelectedOption(event.target.value);
+	};
 
 	const callAPI = async (query, requestOptions, eidr_id) => {
 		const response = await fetch(query, requestOptions);
@@ -107,7 +126,7 @@ const App = () => {
 		};
 		//let query = `https://cors-anywhere.herokuapp.com/https://proxy.eidr.org/resolve/${inputs.eidr_id}?type=Full&followAlias=false`;
 		let query = "";
-		query = `${API_URL}/api/resolve`;
+		query = `${API_URL}/api/resolve/${selectedOption}`;
 		requestOptions = {
 			...requestOptions,
 			body: JSON.stringify({ eidr_id: eidrId }),
@@ -129,12 +148,34 @@ const App = () => {
 			<h1 className='text-4xl font-bold text-center mb-4'>
 				BMR Template Generator
 			</h1>
-			<button
-				onClick={handleFormChange}
-				className='text-white bg-black rounded-lg shadow-lg p-2 mt-4 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110'
-			>
-				{isForm ? "Switch to File Mode" : "Switch to Text Mode"}
-			</button>
+			<div>
+				<button
+					onClick={handleFormChange}
+					className='text-white bg-black rounded-lg shadow-lg p-2 mt-4 transition duration-500 mr-2'
+				>
+					{isForm ? "Switch to File Mode" : "Switch to Text Mode"}
+				</button>
+				<select
+					value={selectedOption}
+					onChange={handleOptionChange}
+					className='text-black bg-white rounded-lg shadow-lg p-2 mt-4 transition duration-500'
+				>
+					<option value='' disabled>
+						Select an environment
+					</option>
+					<option value='sandbox1'>Sandbox1</option>
+					<option value='production'>Production</option>
+					<option value='sandbox2'>Sandbox2</option>
+				</select>
+			</div>
+			{selectedOption === "production" && (
+				<div className='mt-2'>
+					<FontAwesomeIcon icon={faWarning} className='text-yellow-500 ml-2' />
+					<span className='text-yellow-500'>
+						You have chosen production, use with caution!
+					</span>
+				</div>
+			)}
 			<div className='flex'>
 				{isForm ? (
 					<GenerateFormInput
