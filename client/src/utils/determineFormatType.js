@@ -49,10 +49,17 @@ const determineFormatType = (xmlDoc) => {
 			for (let tag in tags) {
 				const tagNames = extraObjectMetadata.getElementsByTagName(tag);
 				if (tagNames.length > 0) {
-					console.log(tagNames[0].textContent);
 					hasNonEpisodicTags = false;
 					break;
 				}
+			}
+			if (
+				extraObjectMetadata.getElementsByTagName("ClipInfo").length > 0 ||
+				extraObjectMetadata.getElementsByTagName("CompilationInfo").length >
+					0 ||
+				extraObjectMetadata.getElementsByTagName("ManifestationInfo").length > 0
+			) {
+				return "Unknown";
 			}
 			if (hasNonEpisodicTags) {
 				return "NonEpisodic";

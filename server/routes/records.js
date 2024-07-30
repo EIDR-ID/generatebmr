@@ -10,11 +10,13 @@ const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
-router.post("/resolve", RecordsController.getRecordsById);
+//modify below code to take in parameters from the client url
+router.post("/resolve/:envId", RecordsController.getRecordsById);
 // router.post("/register", RecordsController.createEidrRecord);
 
 // router.get('/:giftId', (req, res) => {
 //   res.status(200).sendFile(path.resolve(__dirname, '../public/gift.html'))
 // })
+// router get by url parameter
 
 export default router;
