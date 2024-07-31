@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import GenerateFormInput from "./components/GenerateFormInput";
 import determineFormatType from "./utils/determineFormatType";
@@ -8,6 +8,8 @@ import { generateDataConfig } from "./utils/generateDataConfig";
 import LoadingModal from "./components/LoadingModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Login from "./pages/Login";
 
 const App = () => {
 	const [inputs, setInputs] = useState({
@@ -18,6 +20,8 @@ const App = () => {
 			? "https://bmrtemplate-production.up.railway.app"
 			: "http://localhost:3001";
 
+	const [user, setUser] = useState(null);
+	const [loggedIn, setLoggedIn] = useState(false);
 	const [searchType, setSearchType] = useState("");
 	const [editEIDRList, setEditEIDRList] = useState([]);
 	const [eidrErrorList, setEidrErrorList] = useState([]);
@@ -36,6 +40,20 @@ const App = () => {
 	const [isForm, setIsForm] = useState(true);
 	const [dataConfig, setDataConfig] = useState({ sections: [] });
 	const [selectedOption, setSelectedOption] = useState("");
+
+	useEffect(() => {
+		const getUser = async () => {
+			const response = await fetch(`${API_URL}/auth/login/success`, {
+				credentials: "include",
+			});
+			const content = await response.json();
+			if (content.user) {
+				setUser(content.user);
+				setLoggedIn(true);
+			}
+		};
+		getUser();
+	}, [user]);
 
 	useEffect(() => {
 		setDataConfig(
@@ -145,63 +163,72 @@ const App = () => {
 
 	return (
 		<div className='min-h-screen w-full md:w-4/5 lg:w-4/4 xl:w-2/3 bg-gradient-to-r from-gray-400 to-green-700 py-6 flex flex-col justify-center sm:py-12 mx-auto flex items-center'>
-			<h1 className='text-4xl font-bold text-center mb-4'>
-				BMR Template Generator
-			</h1>
-			<div>
-				<button
-					onClick={handleFormChange}
-					className='text-white bg-black rounded-lg shadow-lg p-2 mt-4 transition duration-500 mr-2'
-				>
-					{isForm ? "Switch to File Mode" : "Switch to Text Mode"}
-				</button>
-				<select
-					value={selectedOption}
-					onChange={handleOptionChange}
-					className='text-black bg-white rounded-lg shadow-lg p-2 mt-4 transition duration-500'
-				>
-					<option value='' disabled>
-						Select an environment
-					</option>
-					<option value='sandbox1'>Sandbox1</option>
-					<option value='production'>Production</option>
-					<option value='sandbox2'>Sandbox2</option>
-				</select>
-			</div>
-			{selectedOption === "production" && (
-				<div className='mt-2'>
-					<FontAwesomeIcon icon={faWarning} className='text-yellow-500 ml-2' />
-					<span className='text-yellow-500'>
-						You have chosen production, use with caution!
-					</span>
-				</div>
-			)}
-			<div className='flex'>
-				{isForm ? (
-					<GenerateFormInput
-						inputs={inputs}
-						handleChange={(e) =>
-							setInputs((prevState) => ({
-								...prevState,
-								[e.target.name]: e.target.value.trim(),
-							}))
-						}
-						setSearchType={setSearchType}
-						makeQuery={makeQuery}
-						onLoading={handleLoading}
-					/>
-				) : (
-					<GenerateFileInput
-						setSearchType={setSearchType}
-						makeQuery={makeQuery}
-						onLoading={handleLoading}
-					/>
-				)}
-			</div>
+			{loggedIn ? (
+				<>
+					<h1 className='text-4xl font-bold text-center mb-4'>
+						BMR Template Generator
+					</h1>
+					<div>
+						<button
+							onClick={handleFormChange}
+							className='text-white bg-black rounded-lg shadow-lg p-2 mt-4 transition duration-500 mr-2'
+						>
+							{isForm ? "Switch to File Mode" : "Switch to Text Mode"}
+						</button>
+						<select
+							value={selectedOption}
+							onChange={handleOptionChange}
+							className='text-black bg-white rounded-lg shadow-lg p-2 mt-4 transition duration-500'
+						>
+							<option value='' disabled>
+								Select an environment
+							</option>
+							<option value='sandbox1'>Sandbox1</option>
+							<option value='production'>Production</option>
+							<option value='sandbox2'>Sandbox2</option>
+						</select>
+					</div>
+					{selectedOption === "production" && (
+						<div className='mt-2'>
+							<FontAwesomeIcon
+								icon={faWarning}
+								className='text-yellow-500 ml-2'
+							/>
+							<span className='text-yellow-500'>
+								You have chosen production, use with caution!
+							</span>
+						</div>
+					)}
+					<div className='flex'>
+						{isForm ? (
+							<GenerateFormInput
+								inputs={inputs}
+								handleChange={(e) =>
+									setInputs((prevState) => ({
+										...prevState,
+										[e.target.name]: e.target.value.trim(),
+									}))
+								}
+								setSearchType={setSearchType}
+								makeQuery={makeQuery}
+								onLoading={handleLoading}
+							/>
+						) : (
+							<GenerateFileInput
+								setSearchType={setSearchType}
+								makeQuery={makeQuery}
+								onLoading={handleLoading}
+							/>
+						)}
+					</div>
 
-			{!loading && <GeneratedTable dataConfig={dataConfig} />}
-			{loading && <LoadingModal modalIsOpen={loading} />}
-			<br></br>
+					{!loading && <GeneratedTable dataConfig={dataConfig} />}
+					{loading && <LoadingModal modalIsOpen={loading} />}
+					<br></br>
+				</>
+			) : (
+				<Login API_URL={API_URL} />
+			)}
 		</div>
 	);
 };

@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 server/.env
 client/build/*
+
+# dotenv environment variable files 
+.env
