@@ -18,7 +18,7 @@ const getRecordsById = async (req, res) => {
 		} else if (envId === "sandbox2") {
 			query = `https://sandbox2-mirror.eidr.org/EIDR/object/${body.eidr_id}?type=SelfDefined`;
 		} else if (envId === "production") {
-			query = `https://proxy.eidr.org/resolve/${body.eidr_id}?type=SelfDefined`;
+			query = `https://resolve.eidr.org/EIDR/object/${body.eidr_id}?type=SelfDefined`;
 		}
 
 		const response = await fetch(query, {
