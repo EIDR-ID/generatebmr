@@ -53,7 +53,7 @@ const App = () => {
 			}
 		};
 		getUser();
-	}, [user]);
+	}, []);
 
 	useEffect(() => {
 		setDataConfig(
