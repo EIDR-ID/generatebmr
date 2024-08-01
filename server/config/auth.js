@@ -1,8 +1,10 @@
 import GitHubStrategy from "passport-github2";
-
+import dotenv from "dotenv";
+dotenv.config({ path: "../.env" });
+console.log("This is ", process.env);
 const options = {
-	clientID: "Ov23liBJ8My2glYmMAKI",
-	clientSecret: "286d0c82a8161cb230083db5925d2c7023ef0537",
+	clientID: process.env.GITHUB_CLIENT_ID,
+	clientSecret: process.env.GITHUB_CLIENT_SECRET,
 	callbackURL: "http://localhost:3001/auth/github/callback",
 };
 

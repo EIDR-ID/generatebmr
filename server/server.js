@@ -1,4 +1,5 @@
 import express from "express";
+import "./config/dotenv.js";
 import passport from "passport";
 import session from "express-session";
 import { GitHub } from "./config/auth.js";
@@ -6,9 +7,7 @@ import recordRouter from "./routes/records.js";
 import authRoutes from "./routes/auth.js";
 import cors from "cors";
 import xmlparser from "express-xml-bodyparser";
-import dotenv from "dotenv";
 
-dotenv.config();
 const app = express();
 app.use(xmlparser());
 app.use(
@@ -42,9 +41,8 @@ app.use(express.json());
 app.use("/api", recordRouter);
 app.use("/auth", authRoutes);
 app.get("/", (req, res) => {
-	res
-		.status(200)
-		.send('<h1 style="text-align: center; margin-top: 50px;">MYEIDR API</h1>');
+	res.redirect("https://client-production-863e.up.railway.app");
+	// res.redirect("http://localhost:3000"); //Local switch to localhost
 });
 
 const PORT = process.env.PORT || 3001;

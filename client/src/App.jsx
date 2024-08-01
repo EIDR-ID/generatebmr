@@ -95,6 +95,11 @@ const App = () => {
 	const handleFormChange = () => {
 		setIsForm((prev) => !prev);
 	};
+	const handleLogout = () => {
+		// Your logout logic here, e.g., clearing tokens, redirecting, etc.
+		console.log("User logged out");
+		setLoggedIn(false);
+	};
 	const handleOptionChange = (event) => {
 		setEpisodicList([]);
 		setHasEpisodic(false);
@@ -165,6 +170,12 @@ const App = () => {
 		<div className='min-h-screen w-full md:w-4/5 lg:w-4/4 xl:w-2/3 bg-gradient-to-r from-gray-400 to-green-700 py-6 flex flex-col justify-center sm:py-12 mx-auto flex items-center'>
 			{loggedIn ? (
 				<>
+					<button
+						onClick={handleLogout}
+						className='text-white bg-red-500 rounded-lg shadow-lg p-2 mt-4 transition duration-500 mb-5'
+					>
+						Logout
+					</button>
 					<h1 className='text-4xl font-bold text-center mb-4'>
 						BMR Template Generator
 					</h1>
