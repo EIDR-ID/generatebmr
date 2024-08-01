@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import LoadingModal from "./LoadingModal";
 
 const GenerateFormInput = ({
 	inputs,

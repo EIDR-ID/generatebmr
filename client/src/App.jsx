@@ -40,16 +40,26 @@ const App = () => {
 	const [isForm, setIsForm] = useState(true);
 	const [dataConfig, setDataConfig] = useState({ sections: [] });
 	const [selectedOption, setSelectedOption] = useState("sandbox1");
+	const [loginError, setLoginError] = useState("");
 
 	useEffect(() => {
 		const getUser = async () => {
-			const response = await fetch(`${API_URL}/auth/login/success`, {
-				credentials: "include",
-			});
-			const content = await response.json();
-			if (content.user) {
-				setUser(content.user);
-				setLoggedIn(true);
+			try {
+				console.log("Before retrieving user");
+				setLoading(true);
+				const response = await fetch(`${API_URL}/auth/login/success`, {
+					credentials: "include",
+				});
+				const content = await response.json();
+				if (content.user) {
+					setUser(content.user);
+					setLoggedIn(true);
+				}
+				console.log("After retrieving user");
+				setLoading(false);
+			} catch (error) {
+				setLoginError("Error logging in");
+				console.log("Login Error: ", error);
 			}
 		};
 		getUser();
@@ -236,12 +246,15 @@ const App = () => {
 					</div>
 
 					{!loading && <GeneratedTable dataConfig={dataConfig} />}
-					{loading && <LoadingModal modalIsOpen={loading} />}
 					<br></br>
 				</div>
 			) : (
 				<div className='flex flex-col items-center justify-center'>
-					<Login API_URL={API_URL} />
+					<Login />
+					{loginError && (
+						<p>There is problem with logging in, please try again</p>
+					)}
+					{loading && <LoadingModal modalIsOpen={loading} />}
 				</div>
 			)}
 		</div>
