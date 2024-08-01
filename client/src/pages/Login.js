@@ -1,4 +1,4 @@
-const Login = (props) => {
+const Login = () => {
 	const API_URL =
 		process.env.NODE_ENV === "production"
 			? "https://bmrtemplate-production.up.railway.app"

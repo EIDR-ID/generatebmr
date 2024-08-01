@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUpload } from "@fortawesome/free-solid-svg-icons";
-import LoadingModal from "./LoadingModal"; // Import the LoadingModal component
 
 function GenerateFileInput({ setSearchType, makeQuery, onLoading }) {
 	// State to store the file content

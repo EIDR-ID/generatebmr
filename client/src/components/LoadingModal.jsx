@@ -29,7 +29,7 @@ const LoadingModal = (modalOpen) => {
 			}}
 		>
 			<FontAwesomeIcon icon={faSpinner} size='3x' spin />
-			<p>Files processing, do not close browser</p>
+			<p>Processing, do not close browser</p>
 		</ReactModal>
 	);
 };
