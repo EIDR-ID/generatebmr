@@ -42,7 +42,7 @@ app.use("/api", recordRouter);
 app.use("/auth", authRoutes);
 app.get("/", (req, res) => {
 	// res.redirect(process.env.CALLBACK_URL);
-	res.redirect("http://localhost:3000"); //Local switch to localhost
+	res.redirect("https://client-production-863e.up.railway.app/"); //Local switch to localhost
 });
 
 const PORT = process.env.PORT || 3001;
