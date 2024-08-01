@@ -60,6 +60,7 @@ const App = () => {
 			} catch (error) {
 				setLoginError("Error logging in");
 				console.log("Login Error: ", error);
+				setLoading(false);
 			}
 		};
 		getUser();
