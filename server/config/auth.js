@@ -5,7 +5,7 @@ console.log("This is ", process.env);
 const options = {
 	clientID: process.env.GITHUB_CLIENT_ID,
 	clientSecret: process.env.GITHUB_CLIENT_SECRET,
-	callbackURL: `${process.env.HOST_NAME}/auth/github/callback`,
+	// callbackURL: `${process.env.HOST_NAME}/auth/github/callback`,
 };
 
 const verify = async (accessToken, refreshToken, profile, callback) => {
