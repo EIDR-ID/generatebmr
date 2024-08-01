@@ -39,7 +39,7 @@ const App = () => {
 	const [loading, setLoading] = useState(false);
 	const [isForm, setIsForm] = useState(true);
 	const [dataConfig, setDataConfig] = useState({ sections: [] });
-	const [selectedOption, setSelectedOption] = useState("");
+	const [selectedOption, setSelectedOption] = useState("sandbox1");
 
 	useEffect(() => {
 		const getUser = async () => {
@@ -167,15 +167,17 @@ const App = () => {
 	};
 
 	return (
-		<div className='min-h-screen w-full md:w-4/5 lg:w-4/4 xl:w-2/3 bg-gradient-to-r from-gray-400 to-green-700 py-6 flex flex-col justify-center sm:py-12 mx-auto flex items-center'>
+		<div className='bg-gradient-to-r from-gray-400 to-green-700 min-h-screen w-full py-6 flex flex-col justify-center sm:py-12 items-center'>
 			{loggedIn ? (
-				<>
-					<button
-						onClick={handleLogout}
-						className='text-white bg-red-500 rounded-lg shadow-lg p-2 mt-4 transition duration-500 mb-5'
-					>
-						Logout
-					</button>
+				<div className='flex flex-col items-center justify-center'>
+					<div>
+						<button
+							onClick={handleLogout}
+							className='absolute top-10 right-10 text-white bg-gray-500 rounded-lg shadow-lg p-2 mt-4 transition duration-500 mb-5 cursor-pointer'
+						>
+							Logout
+						</button>
+					</div>
 					<h1 className='text-4xl font-bold text-center mb-4'>
 						BMR Template Generator
 					</h1>
@@ -236,9 +238,11 @@ const App = () => {
 					{!loading && <GeneratedTable dataConfig={dataConfig} />}
 					{loading && <LoadingModal modalIsOpen={loading} />}
 					<br></br>
-				</>
+				</div>
 			) : (
-				<Login API_URL={API_URL} />
+				<div className='flex flex-col items-center justify-center'>
+					<Login API_URL={API_URL} />
+				</div>
 			)}
 		</div>
 	);
