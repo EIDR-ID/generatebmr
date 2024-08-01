@@ -1,5 +1,9 @@
 const Login = (props) => {
-	const AUTH_URL = "http://localhost:3001/auth/github";
+	const API_URL =
+		process.env.NODE_ENV === "production"
+			? "https://bmrtemplate-production.up.railway.app"
+			: "http://localhost:3001";
+	const AUTH_URL = `${API_URL}/auth/github`;
 
 	return (
 		<div className='Login back'>
