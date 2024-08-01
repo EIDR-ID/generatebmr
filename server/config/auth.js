@@ -2,10 +2,14 @@ import GitHubStrategy from "passport-github2";
 import dotenv from "dotenv";
 dotenv.config({ path: "../.env" });
 console.log("This is ", process.env);
+const CALLBACK_URL =
+	process.env.ENV === "local"
+		? "http://localhost:3001/auth/github/callback"
+		: "/auth/github/callback";
 const options = {
 	clientID: process.env.GITHUB_CLIENT_ID,
 	clientSecret: process.env.GITHUB_CLIENT_SECRET,
-	callbackURL: `/auth/github/callback`,
+	callbackURL: CALLBACK_URL,
 };
 
 const verify = async (accessToken, refreshToken, profile, callback) => {
