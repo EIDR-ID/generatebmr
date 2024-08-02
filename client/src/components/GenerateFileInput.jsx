@@ -45,8 +45,8 @@ function GenerateFileInput({ setSearchType, makeQuery, onLoading }) {
 	};
 
 	return (
-		<div className='flex flex-col items-center justify-center'>
-			<div className='flex items-center bg-white py-2 shadow-md rounded-lg mt-5'>
+		<div className='flex flex-col items-center justify-center w-full max-w-sm'>
+			<div className='flex items-center bg-white py-2 shadow-md rounded-lg mt-5 w-full max-w-lg'>
 				<input
 					type='file'
 					accept='.txt'
@@ -61,7 +61,7 @@ function GenerateFileInput({ setSearchType, makeQuery, onLoading }) {
 			<button
 				type='submit'
 				onClick={submitForm}
-				className='text-white bg-black rounded-lg shadow-lg p-2 mt-4 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110'
+				className='grow w-full text-white bg-black rounded-lg shadow-lg p-2 mt-4 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110'
 			>
 				Generate from File
 			</button>
