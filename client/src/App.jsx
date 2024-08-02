@@ -21,7 +21,7 @@ const App = () => {
 			: "http://localhost:3001";
 
 	const [user, setUser] = useState(null);
-	const [loggedIn, setLoggedIn] = useState(false);
+	const [loggedIn, setLoggedIn] = useState(true);
 	const [searchType, setSearchType] = useState("");
 	const [editEIDRList, setEditEIDRList] = useState([]);
 	const [eidrErrorList, setEidrErrorList] = useState([]);
@@ -41,7 +41,11 @@ const App = () => {
 	const [dataConfig, setDataConfig] = useState({ sections: [] });
 	const [selectedOption, setSelectedOption] = useState("sandbox1");
 	const [loginError, setLoginError] = useState("");
-
+	const [loginInfo, setLoginInfo] = useState({
+		username: "",
+		password: "",
+		partyID: "",
+	});
 	useEffect(() => {
 		const getUser = async () => {
 			try {
@@ -106,11 +110,22 @@ const App = () => {
 	const handleFormChange = () => {
 		setIsForm((prev) => !prev);
 	};
+
+	const handleLogin = (e) => {
+		const { name, value } = e.target;
+		setLoginInfo((prev) => ({
+			...prev,
+			[name]: value,
+		}));
+		setLoginError(false);
+	};
+
 	const handleLogout = () => {
 		// Your logout logic here, e.g., clearing tokens, redirecting, etc.
 		console.log("User logged out");
 		setLoggedIn(false);
 	};
+
 	const handleOptionChange = (event) => {
 		setEpisodicList([]);
 		setHasEpisodic(false);
@@ -130,6 +145,10 @@ const App = () => {
 
 	const callAPI = async (query, requestOptions, eidr_id) => {
 		const response = await fetch(query, requestOptions);
+		if (response.status === 401) {
+			setLoginError(true);
+			return;
+		}
 		const text = await response.text(); // Changed from json() to text() to handle XML
 		const parser = new DOMParser();
 		const xmlDoc = await parser.parseFromString(text, "application/xml");
@@ -153,22 +172,31 @@ const App = () => {
 		}
 	};
 
-	const makeQuery = (eidrId) => {
+	const makeQuery = async (eidrId) => {
 		let requestOptions = {
 			method: "POST",
-			headers: { "Content-Type": "application/json" },
+			headers: {
+				"Content-Type": "application/json",
+			},
 		};
 		//let query = `https://cors-anywhere.herokuapp.com/https://proxy.eidr.org/resolve/${inputs.eidr_id}?type=Full&followAlias=false`;
 		let query = "";
 		query = `${API_URL}/api/resolve/${selectedOption}`;
 		requestOptions = {
 			...requestOptions,
-			body: JSON.stringify({ eidr_id: eidrId }),
+			body: JSON.stringify({
+				username: loginInfo.username,
+				password: loginInfo.password,
+				partyID: loginInfo.partyID,
+				eidr_id: eidrId,
+			}),
 		};
-		callAPI(query, requestOptions, eidrId).catch((error) => {
+		try {
+			await callAPI(query, requestOptions, eidrId);
+		} catch (error) {
 			console.error("Error right here ", eidrId, ": ", error);
 			setEidrErrorList((prev) => [...prev, eidrId]);
-		});
+		}
 	};
 	const reset = () => {
 		setInputs({
@@ -181,18 +209,50 @@ const App = () => {
 		<div className='bg-gradient-to-r from-gray-400 to-green-700 min-h-screen w-full py-6 flex flex-col justify-center sm:py-12 items-center'>
 			{loggedIn ? (
 				<div className='flex flex-col items-center justify-center'>
-					<div>
-						<button
-							onClick={handleLogout}
-							className='absolute top-10 right-10 text-white bg-gray-500 rounded-lg shadow-lg p-2 mt-4 transition duration-500 mb-5 cursor-pointer'
-						>
-							Logout
-						</button>
-					</div>
 					<h1 className='text-4xl font-bold text-center mb-4'>
 						BMR Template Generator
 					</h1>
-					<div>
+					<div className='flex flex-col w-full max-w-sm'>
+						<input
+							type='text'
+							name='username'
+							placeholder='Username'
+							value={loginInfo.username}
+							onChange={handleLogin}
+							className='mb-4 w-full'
+						/>
+
+						<input
+							type='password'
+							name='password'
+							placeholder='Password'
+							value={loginInfo.password}
+							onChange={handleLogin}
+							className='mb-4 w-full'
+						/>
+
+						<input
+							type='text'
+							name='partyID'
+							placeholder='Party ID'
+							value={loginInfo.partyID}
+							onChange={handleLogin}
+							className='mb-4 w-full'
+						/>
+						{loginError && (
+							<div className='mt-2 w-full flex items-center'>
+								<FontAwesomeIcon
+									icon={faWarning}
+									className='text-red-500 mr-2'
+								/>
+								<span className='text-red-500'>
+									Login error. Please try again.
+								</span>
+							</div>
+						)}
+					</div>
+
+					<div className='flex w-full max-w-sm pr-0'>
 						<button
 							onClick={handleFormChange}
 							className='text-white bg-black rounded-lg shadow-lg p-2 mt-4 transition duration-500 mr-2'
@@ -202,7 +262,7 @@ const App = () => {
 						<select
 							value={selectedOption}
 							onChange={handleOptionChange}
-							className='text-black bg-white rounded-lg shadow-lg p-2 mt-4 transition duration-500'
+							className='text-black bg-white rounded-lg shadow-lg mt-4 ml-2 transition duration-500 flex grow w-1'
 						>
 							<option value='' disabled>
 								Select an environment
@@ -223,7 +283,7 @@ const App = () => {
 							</span>
 						</div>
 					)}
-					<div className='flex'>
+					<div className='flex w-full max-w-sm'>
 						{isForm ? (
 							<GenerateFormInput
 								inputs={inputs}

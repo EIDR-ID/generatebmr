@@ -35,8 +35,8 @@ const GenerateFormInput = ({
 		});
 	};
 	return (
-		<div className='max-w-screen-xl mx-auto px-8 text-center font-poppins'>
-			<form className='flex justify-between items-stretch relative p-4 flex-wrap'>
+		<div className='flex flex-col justify-center mt-4'>
+			<form className='flex justify-between items-stretch relative flex-wrap'>
 				{inputs &&
 					Object.entries(inputs).map(([category, value], index) => (
 						<li

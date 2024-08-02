@@ -1,7 +1,7 @@
 import GitHubStrategy from "passport-github2";
 import dotenv from "dotenv";
 dotenv.config({ path: "../.env" });
-console.log("This is ", process.env);
+// console.log("This is ", process.env);
 const CALLBACK_URL =
 	process.env.ENV === "local"
 		? "http://localhost:3001/auth/github/callback"
