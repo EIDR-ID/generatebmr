@@ -185,9 +185,9 @@ const App = () => {
 		requestOptions = {
 			...requestOptions,
 			body: JSON.stringify({
-				username: loginInfo.username,
-				password: loginInfo.password,
-				partyID: loginInfo.partyID,
+				username: loginInfo.username.trim(),
+				password: loginInfo.password.trim(),
+				partyID: loginInfo.partyID.trim(),
 				eidr_id: eidrId,
 			}),
 		};
