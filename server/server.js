@@ -19,10 +19,7 @@ app.use(
 );
 app.use(
 	cors({
-		origin: [
-			"https://client-production-863e.up.railway.app",
-			"http://localhost:3000",
-		],
+		origin: [process.env.CORS_CLIENT, "http://localhost:3000"],
 		methods: "GET,POST,PUT,DELETE,PATCH",
 		credentials: true,
 	})
