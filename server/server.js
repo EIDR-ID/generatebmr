@@ -2,7 +2,7 @@ import express from "express";
 import "./config/dotenv.js";
 import passport from "passport";
 import session from "express-session";
-import { GitHub } from "./config/auth.js";
+// import { GitHub } from "./config/auth.js";
 import recordRouter from "./routes/records.js";
 import authRoutes from "./routes/auth.js";
 import cors from "cors";
@@ -27,7 +27,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(GitHub);
+// passport.use(GitHub);
 passport.serializeUser((user, done) => {
 	done(null, user);
 });

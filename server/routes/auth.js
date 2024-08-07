@@ -28,19 +28,4 @@ router.get("/logout", (req, res, next) => {
 	});
 });
 
-router.get(
-	"/github",
-	passport.authenticate("github", {
-		scope: ["read:user"],
-	})
-);
-
-router.get(
-	"/github/callback",
-	passport.authenticate("github", {
-		successRedirect: "/",
-		failureRedirect: "/",
-	})
-);
-
 export default router;
