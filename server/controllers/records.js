@@ -7,6 +7,10 @@ const generateMd5Hash = (password) => {
 	return crypto.createHash("md5").update(password).digest("base64");
 };
 
+const generateSha256Hash = (password) => {
+	return crypto.createHash("sha256").update(password).digest("base64");
+};
+
 const getRecordsById = async (req, res) => {
 	// console.log(req.body);
 	console.log(req.params);
@@ -16,21 +20,21 @@ const getRecordsById = async (req, res) => {
 		const body = req.body; //Username, password, partyID, eidr_id from req.body
 		const { username, partyID, password, eidr_id } = body;
 
-		const md5Password = generateMd5Hash(password);
-
-		let headers = {
-			"Content-Type": "application/xml",
-			Accept: "*/*",
-			Authorization: `Eidr ${username}:${partyID}:${md5Password}`,
-		};
+		let finalPassword = generateMd5Hash(password);
 		let query = `https://${envId}.eidr.org/EIDR/object/${eidr_id}?type=SelfDefined`;
 		if (envId === "sandbox1") {
 			query = `https://sandbox1.eidr.org/EIDR/object/${eidr_id}?type=SelfDefined`;
 		} else if (envId === "sandbox2") {
 			query = `https://sandbox2-mirror.eidr.org/EIDR/object/${eidr_id}?type=SelfDefined`;
+			finalPassword = generateSha256Hash(password);
 		} else if (envId === "production") {
 			query = `https://resolve.eidr.org/EIDR/object/${eidr_id}?type=SelfDefined`;
 		}
+		let headers = {
+			"Content-Type": "application/xml",
+			Accept: "*/*",
+			Authorization: `Eidr ${username}:${partyID}:${finalPassword}`,
+		};
 
 		const response = await fetch(query, {
 			method: "GET",
