@@ -15,7 +15,7 @@ jobs:
           else
             case "$GITHUB_REF_NAME" in
               develop) DEPLOY_SERVER="35.166.60.179" ;;
-              main) DEPLOY_SERVER="sb1tools.eidr.org" ;;
+              main) DEPLOY_SERVER="betatools.eidr.org" ;;
             esac
           fi
           echo "$DEPLOY_SERVER" > ./server.txt
