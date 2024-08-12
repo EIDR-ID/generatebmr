@@ -4,7 +4,7 @@ on: [push]
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 4
     steps:
       - uses: actions/checkout@v4
       - name: Set environment for branch
