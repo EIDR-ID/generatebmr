@@ -1,8 +1,12 @@
 #!/bin/bash
 
+set -e
+
 # build client
 cd client
+npm ci
 npm run build
+cd -
 
 # rsync everything
 DEPLOY_SERVER=$(cat ./server.txt)
