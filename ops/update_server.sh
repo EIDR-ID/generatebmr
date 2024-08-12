@@ -2,4 +2,4 @@
 
 cd /opt/eidr/webtools/generatebmr/server
 npm ci
-pm2 restart generatebmr-server
+/opt/eidr/.local/bin/pm2 restart generatebmr-server
