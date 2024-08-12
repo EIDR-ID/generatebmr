@@ -33,4 +33,4 @@ jobs:
         shell: bash
         env:
           SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
-      - run: ./ops/deploy.sh
+      - run: bash ./ops/deploy.sh
