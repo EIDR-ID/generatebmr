@@ -19,7 +19,7 @@ app.use(
 );
 app.use(
 	cors({
-		origin: [process.env.CORS_CLIENT, "http://localhost:3000"],
+		origin: [process.env.CORS_CLIENT],
 		methods: "GET,POST,PUT,DELETE,PATCH",
 		credentials: true,
 	})

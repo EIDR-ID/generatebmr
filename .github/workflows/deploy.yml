@@ -1,0 +1,36 @@
+name: deploy
+run-name: Deploying site
+on: [push]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set environment for branch
+        run: |
+          DEPLOY_SERVER="devtools.eidr.org"
+          if [[ "$GITHUB_REF_NAME" == release-* ]]; then
+            DEPLOY_SERVER="tools.eidr.org"
+          else
+            case "$GITHUB_REF_NAME" in
+              develop) DEPLOY_SERVER="35.166.60.179" ;;
+              main) DEPLOY_SERVER="sb1tools.eidr.org" ;;
+            esac
+          fi
+          echo "$DEPLOY_SERVER" > ./server.txt
+          echo "ENV=local" > ./client/.env
+          echo "NODE_ENV=production" >> ./client/.env
+          echo "CORS_CLIENT=https://$DEPLOY_SERVER"  >> ./client/.env
+          cp ./client/.env ./server/.env
+          # redirect and port?
+      - name: Create SSH key
+        run: |
+          mkdir -p ~/.ssh/
+          chmod 700 ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+      - run: ./ops/deploy.sh
