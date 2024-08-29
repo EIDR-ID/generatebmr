@@ -6,8 +6,6 @@ set -e
 cd client
 npm ci
 npm run build
-mkdir -p build/generatebmr
-find build -maxdepth 1 ! -name 'index.html' ! -name 'generatebmr' -exec mv {} build/generatebmr/ \;
 cd -
 
 # rsync everything
