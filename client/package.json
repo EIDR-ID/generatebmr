@@ -4,6 +4,7 @@
 	"version": "1.0.0",
 	"type": "module",
 	"react-scripts": "5.0.1",
+	"homepage": ".",
 	"scripts": {
 		"start": "serve build -s -n -L -p $PORT",
 		"dev": "react-scripts start",
