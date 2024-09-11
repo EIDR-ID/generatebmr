@@ -15,7 +15,10 @@ const App = () => {
 	const [inputs, setInputs] = useState({
 		eidr_id: "",
 	});
-	const API_URL = "http://localhost:3001";
+	const API_URL =
+			process.env.NODE_ENV === "production"
+					? "https://bmrtemplate-production.up.railway.app"
+					: "http://localhost:3001";
 
 	const [user, setUser] = useState(null);
 	const [loggedIn, setLoggedIn] = useState(true);
