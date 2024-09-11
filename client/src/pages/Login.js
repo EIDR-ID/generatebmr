@@ -1,8 +1,5 @@
 const Login = () => {
-	const API_URL =
-		process.env.NODE_ENV === "production"
-			? "https://bmrtemplate-production.up.railway.app"
-			: "http://localhost:3001";
+	const API_URL = "http://localhost:3001";
 	const AUTH_URL = `${API_URL}/auth/github`;
 
 	return (
