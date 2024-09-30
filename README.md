@@ -5,7 +5,7 @@
  3. Can download plaintexts of each category, as well as generate excel.
   
 
- # Instructions to run: 
+ # Instructions to run:   
 1. In terminal, do "cd client", then run the command "npm install"
 2. Do "cd server", then run the command "npm install"
 3. In server directory, run "npm start"

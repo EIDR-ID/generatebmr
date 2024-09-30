@@ -17,7 +17,7 @@ const App = () => {
 	});
 	const API_URL =
 			process.env.NODE_ENV === "production"
-					? "https://bmrtemplate-production.up.railway.app"
+					? `https://${process.env.DEPLOY_DOMAIN}`
 					: "http://localhost:3001";
 
 	const [user, setUser] = useState(null);
