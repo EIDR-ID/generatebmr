@@ -14,7 +14,7 @@ jobs:
             DEPLOY_DOMAIN="tools.eidr.org"
           else
             case "$GITHUB_REF_NAME" in
-              develop) DEPLOY_SERVER="35.166.60.179" && DEPLOY_DOMAIN="sb2tools.eidr.org;;
+              develop) DEPLOY_SERVER="35.166.60.179" && DEPLOY_DOMAIN="sb2tools.eidr.org";;
               main) DEPLOY_DOMAIN="betatools.eidr.org" ;;
             esac
           fi
