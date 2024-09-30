@@ -23,6 +23,7 @@ jobs:
           echo "NODE_ENV=production" >> ./client/.env
           echo "CORS_CLIENT=https://$DEPLOY_DOMAIN"  >> ./client/.env
           echo "DEPLOY_DOMAIN=$DEPLOY_DOMAIN" >> ./client/.env
+          cat ./client/.env
           cp ./client/.env ./server/.env
           # redirect and port?
       - name: Create SSH key
