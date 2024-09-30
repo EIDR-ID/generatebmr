@@ -21,10 +21,11 @@ jobs:
           echo "$DEPLOY_SERVER" > ./server.txt
           echo "ENV=local" > ./client/.env
           echo "NODE_ENV=production" >> ./client/.env
-          echo "CORS_CLIENT=https://$DEPLOY_DOMAIN"  >> ./client/.env
-          echo "DEPLOY_DOMAIN=$DEPLOY_DOMAIN" >> ./client/.env
           cat ./client/.env
           cp ./client/.env ./server/.env
+          echo "REACT_APP_DEPLOY_DOMAIN=https://$DEPLOY_DOMAIN" >> ./client/.env
+          echo "CORS_CLIENT=https://$DEPLOY_DOMAIN"  >> ./server/.env
+          cat ./client/.env
           # redirect and port?
       - name: Create SSH key
         run: |

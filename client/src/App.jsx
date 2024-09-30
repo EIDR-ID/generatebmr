@@ -17,8 +17,7 @@ const App = () => {
 	});
 	const API_URL =
 			process.env.NODE_ENV === "production"
-					// ? `https://${process.env.DEPLOY_DOMAIN}/generatebmr/api`
-					? `https://sb2tools.eidr.org/generatebmr/api`
+					? `${process.env.REACT_APP_DEPLOY_DOMAIN}/generatebmr/api`
 					: "http://localhost:3001";
 
 	const [user, setUser] = useState(null);
