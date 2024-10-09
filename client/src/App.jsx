@@ -16,9 +16,9 @@ const App = () => {
 		eidr_id: "",
 	});
 	const API_URL =
-			process.env.NODE_ENV === "production"
-					? `${process.env.REACT_APP_DEPLOY_DOMAIN}/generatebmr/api`
-					: "http://localhost:3001";
+		process.env.NODE_ENV === "production"
+			? `${process.env.REACT_APP_DEPLOY_DOMAIN}/generatebmr/api`
+			: "http://localhost:3001";
 
 	const [user, setUser] = useState(null);
 	const [loggedIn, setLoggedIn] = useState(true);
@@ -257,7 +257,7 @@ const App = () => {
 							onClick={handleFormChange}
 							className='text-white bg-black rounded-lg shadow-lg p-2 mt-4 transition duration-500 mr-2'
 						>
-							{isForm ? "Switch to File Mode" : "Switch to Text Mode"}
+							{isForm ? "Toggle File Mode" : "Toggle Text Mode"}
 						</button>
 						<select
 							value={selectedOption}
