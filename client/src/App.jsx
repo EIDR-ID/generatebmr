@@ -257,7 +257,7 @@ const App = () => {
 							onClick={handleFormChange}
 							className='text-white bg-black rounded-lg shadow-lg p-2 mt-4 transition duration-500 mr-2'
 						>
-							{isForm ? "Toggle File Mode" : "Toggle Text Mode"}
+							{isForm ? "Switch to File Mode" : "Switch to Text Mode"}
 						</button>
 						<select
 							value={selectedOption}
