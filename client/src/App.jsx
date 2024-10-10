@@ -39,14 +39,12 @@ const App = () => {
 	const [loading, setLoading] = useState(false);
 	const [isForm, setIsForm] = useState(true);
 	const [dataConfig, setDataConfig] = useState({ sections: [] });
-	const [modBase, setModBase] = useState(null);
-	const [error, setError] = useState(null);
 	const [selectedOption, setSelectedOption] = useState("sandbox1");
 	const [loginError, setLoginError] = useState("");
 	const [loginInfo, setLoginInfo] = useState({
-		username: "10.5238/mli",
-		password: "ygw9F8hOxlJCPvBK",
-		partyID: "10.5237/9241-BC57",
+		username: "",
+		password: "",
+		partyID: "",
 	});
 	useEffect(() => {
 		const getUser = async () => {
