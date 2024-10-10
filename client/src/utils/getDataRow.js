@@ -8,6 +8,10 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 		const baseObjectData = baseElements[0]; // Assuming we're only interested in the first BaseObjectData element
 
 		dataKeys.forEach((key) => {
+			const skipPattern = /^(Domain|Relation) [1-3]$/;
+			if (skipPattern.test(key)) {
+				return;
+			}
 			const foundElements = baseObjectData.getElementsByTagName(
 				excelToXMLMap[key] || key
 			);
@@ -244,6 +248,60 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 					row.push(value);
 					row.push(role);
 					row.push(idType);
+				} else {
+					row.push("");
+					row.push("");
+					row.push("");
+				}
+			} else if (key === "Alt ID 1") {
+				const altIDs = baseObjectData.getElementsByTagName("AlternateID");
+				if (altIDs.length > 0) {
+					const altIDElement = altIDs[0];
+					const domain =
+						altIDElement.getAttribute("domain") ||
+						altIDElement.getAttribute("xsi:type") ||
+						"";
+					const relation = altIDElement.getAttribute("relation") || "";
+					const value = altIDElement.textContent || "";
+					row.push(value);
+					row.push(domain);
+					row.push(relation);
+				} else {
+					row.push("");
+					row.push("");
+					row.push("");
+				}
+			} else if (key === "Alt ID 2") {
+				const altIDs = baseObjectData.getElementsByTagName("AlternateID");
+				if (altIDs.length > 1) {
+					const altIDElement = altIDs[1];
+					const domain =
+						altIDElement.getAttribute("domain") ||
+						altIDElement.getAttribute("xsi:type") ||
+						"";
+					const relation = altIDElement.getAttribute("relation") || "";
+					const value = altIDElement.textContent || "";
+					row.push(value);
+					row.push(domain);
+					row.push(relation);
+				} else {
+					row.push("");
+					row.push("");
+					row.push("");
+				}
+			} else if (key === "Alt ID 3") {
+				const altIDs = baseObjectData.getElementsByTagName("AlternateID");
+				if (altIDs.length > 2) {
+					const altIDElement = altIDs[2];
+					const domain =
+						altIDElement.getAttribute("domain") ||
+						altIDElement.getAttribute("xsi:type") ||
+						"";
+					const relation = altIDElement.getAttribute("relation") || "";
+					const value = altIDElement.textContent || "";
+					row.push(value);
+					row.push(domain);
+					row.push(relation);
 				} else {
 					row.push("");
 					row.push("");

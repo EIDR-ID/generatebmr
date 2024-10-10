@@ -145,35 +145,17 @@ const App = () => {
 		setSelectedOption(event.target.value);
 	};
 
-	const fetchModBase = async (eidr_id) => {
-		try {
-			const response = await fetch(
-				`https://sandbox1.eidr.org/EIDR/object/modificationbase/${eidr_id}?type=CreateBasic`,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-					},
-				}
-			);
-			if (!response.ok) {
-				throw new Error("Network response was not ok");
-			}
-			const data = await response.json();
-			setModBase(data.modBase);
-			console.log(modBase);
-		} catch (error) {
-			setError(error.message);
-		}
-	};
-
 	const callAPI = async (query, requestOptions, eidr_id) => {
 		const response = await fetch(query, requestOptions);
 		if (response.status === 401) {
 			setLoginError(true);
 			return;
 		}
-		const text = await response.text(); // Changed from json() to text() to handle XML
+		const data = await response.json();
+		const text = data.xmlResp; // Changed from json() to text() to handle XML
+		// console.log("Here is the text: ", text, "\n\n");
+		const modBase = data.modXmlResp;
+		// console.log("Here is the modBase: ", modBase);
 		const parser = new DOMParser();
 		const xmlDoc = await parser.parseFromString(text, "application/xml");
 		const formatType = determineFormatType(xmlDoc);
@@ -196,23 +178,6 @@ const App = () => {
 		}
 	};
 
-	const callModAPI = async (modQuery, requestOptions, eidr_id) => {
-		try {
-			const response = await fetch(modQuery, requestOptions);
-			if (!response.ok) {
-				throw new Error("Network response was not ok");
-			}
-			const text = await response.text(); // Get the response as text
-			const parser = new DOMParser();
-			const xmlDoc = parser.parseFromString(text, "application/xml"); // Parse the text as XML
-			console.log("Modification Base XML:", xmlDoc);
-			setModBase(xmlDoc); // Assuming setModBase can handle XML data
-		} catch (error) {
-			console.error("Error fetching modification base:", error);
-			setError(error.message);
-		}
-	};
-
 	const makeQuery = async (eidrId) => {
 		let requestOptions = {
 			method: "POST",
@@ -222,9 +187,7 @@ const App = () => {
 		};
 		//let query = `https://cors-anywhere.herokuapp.com/https://proxy.eidr.org/resolve/${inputs.eidr_id}?type=Full&followAlias=false`;
 		let query = "";
-		let modQuery = "";
 		query = `${API_URL}/api/resolve/${selectedOption}`;
-		modQuery = `${API_URL}/api/modify/${selectedOption}`;
 		requestOptions = {
 			...requestOptions,
 			body: JSON.stringify({
@@ -236,7 +199,6 @@ const App = () => {
 		};
 		try {
 			await callAPI(query, requestOptions, eidrId);
-			await callModAPI(modQuery, requestOptions, eidrId);
 		} catch (error) {
 			console.error("Error right here ", eidrId, ": ", error);
 			setEidrErrorList((prev) => [...prev, eidrId]);

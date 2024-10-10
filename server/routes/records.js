@@ -12,7 +12,6 @@ const router = express.Router();
 
 //modify below code to take in parameters from the client url
 router.post("/resolve/:envId", RecordsController.getRecordsById);
-router.post("/modify/:envId", RecordsController.getModificationBase);
 // router.post("/register", RecordsController.createEidrRecord);
 
 // router.get('/:giftId', (req, res) => {
