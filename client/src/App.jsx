@@ -39,12 +39,14 @@ const App = () => {
 	const [loading, setLoading] = useState(false);
 	const [isForm, setIsForm] = useState(true);
 	const [dataConfig, setDataConfig] = useState({ sections: [] });
+	const [modBase, setModBase] = useState(null);
+	const [error, setError] = useState(null);
 	const [selectedOption, setSelectedOption] = useState("sandbox1");
 	const [loginError, setLoginError] = useState("");
 	const [loginInfo, setLoginInfo] = useState({
-		username: "",
-		password: "",
-		partyID: "",
+		username: "10.5238/mli",
+		password: "ygw9F8hOxlJCPvBK",
+		partyID: "10.5237/9241-BC57",
 	});
 	useEffect(() => {
 		const getUser = async () => {
@@ -149,7 +151,11 @@ const App = () => {
 			setLoginError(true);
 			return;
 		}
-		const text = await response.text(); // Changed from json() to text() to handle XML
+		const data = await response.json();
+		const text = data.xmlResp; // Changed from json() to text() to handle XML
+		// console.log("Here is the text: ", text, "\n\n");
+		const modBase = data.modXmlResp;
+		// console.log("Here is the modBase: ", modBase);
 		const parser = new DOMParser();
 		const xmlDoc = await parser.parseFromString(text, "application/xml");
 		const formatType = determineFormatType(xmlDoc);
