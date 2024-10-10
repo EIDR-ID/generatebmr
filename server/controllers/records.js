@@ -54,6 +54,49 @@ const getRecordsById = async (req, res) => {
 	}
 };
 
+const getModificationBase = async (req, res) => {
+	console.log(req.params);
+	// I want to get the /:envId from the URL. Give me the code to do that
+	try {
+		const envId = req.params.envId;
+		const body = req.body; //Username, password, partyID, eidr_id from req.body
+		const { username, partyID, password, eidr_id } = body;
+
+		let finalPassword = generateMd5Hash(password);
+		let query = `https://${envId}.eidr.org/EIDR/object/modificationbase/${eidr_id}?type=CreateBasic`;
+		if (envId === "sandbox1") {
+			query = `https://sandbox1.eidr.org/EIDR/object/modificationbase/${eidr_id}?type=CreateBasic`;
+		} else if (envId === "sandbox2") {
+			query = `https://sandbox2-mirror.eidr.org/EIDR/object/modificationbase/${eidr_id}?type=CreateBasic`;
+			finalPassword = generateSha256Hash(password);
+		} else if (envId === "production") {
+			query = `https://resolve.eidr.org/EIDR/object/modificationbase/${eidr_id}?type=CreateBasic`;
+		}
+		let headers = {
+			"Content-Type": "application/xml",
+			Accept: "*/*",
+			Authorization: `Eidr ${username}:${partyID}:${finalPassword}`,
+		};
+
+		const response = await fetch(query, {
+			method: "GET",
+			headers: headers,
+		});
+		const modXmlResp = await response.text();
+		console.log(modXmlResp);
+		const containsStatusCode4 = modXmlResp.includes("<Code>4</Code>");
+		if (containsStatusCode4) {
+			res.status(401).send({ error: "Unauthorized" });
+		} else {
+			res.status(200).type("application/xml").send(modXmlResp); // Correctly set the content type and send the XML response
+		}
+	} catch (error) {
+		console.log("You have received a ", error);
+		res.status(400).send({ error: error.message });
+	}
+};
+
 export default {
 	getRecordsById,
+	getModificationBase,
 };
