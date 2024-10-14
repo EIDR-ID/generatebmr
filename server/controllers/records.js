@@ -3,10 +3,6 @@ import pkg from "express-xml-bodyparser";
 import crypto from "crypto";
 const { xmlparser } = pkg;
 
-const generateMd5Hash = (password) => {
-	return crypto.createHash("md5").update(password).digest("base64");
-};
-
 const generateSha256Hash = (password) => {
 	return crypto.createHash("sha256").update(password).digest("base64");
 };
@@ -20,7 +16,7 @@ const getRecordsById = async (req, res) => {
 		const body = req.body; //Username, password, partyID, eidr_id from req.body
 		const { username, partyID, password, eidr_id } = body;
 
-		let finalPassword = generateMd5Hash(password);
+		const finalPassword = generateSha256Hash(password);
 		let query = `https://${envId}.eidr.org/EIDR/object/${eidr_id}?type=SelfDefined`;
 		let modQuery = `https://${envId}.eidr.org/EIDR/object/modificationbase/${eidr_id}?type=CreateBasic`;
 		if (envId === "sandbox1") {
@@ -29,7 +25,6 @@ const getRecordsById = async (req, res) => {
 		} else if (envId === "sandbox2") {
 			query = `https://sandbox2-mirror.eidr.org/EIDR/object/${eidr_id}?type=SelfDefined`;
 			modQuery = `https://sandbox2-mirror.eidr.org/EIDR/object/modificationbase/${eidr_id}?type=CreateBasic`;
-			finalPassword = generateSha256Hash(password);
 		} else if (envId === "production") {
 			query = `https://resolve.eidr.org/EIDR/object/${eidr_id}?type=SelfDefined`;
 			modQuery = `https://resolve.eidr.org/EIDR/object/modificationbase/${eidr_id}?type=CreateBasic`;
