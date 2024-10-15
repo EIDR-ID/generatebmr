@@ -2,7 +2,7 @@ import excelToXMLMap from "../components/ExcelToXMLMap.js";
 import isAttributeKey from "./isAttributeKey.js";
 
 const getDataRow = (xmlDoc, dataKeys, idx) => {
-	const baseElements = xmlDoc.getElementsByTagName("SelfDefinedMetadata");
+	const baseElements = xmlDoc.getElementsByTagName("FullMetadata");
 	let row = [];
 	if (baseElements.length > 0) {
 		const baseObjectData = baseElements[0]; // Assuming we're only interested in the first BaseObjectData element
