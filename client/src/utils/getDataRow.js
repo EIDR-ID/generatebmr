@@ -8,7 +8,7 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 		const baseObjectData = baseElements[0]; // Assuming we're only interested in the first BaseObjectData element
 
 		dataKeys.forEach((key) => {
-			const skipPattern = /^(Domain|Relation) [1-3]$/;
+			const skipPattern = /^(Domain|Relation) \d+$/;
 			if (skipPattern.test(key)) {
 				return;
 			}
@@ -223,50 +223,14 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 					row.push("");
 					row.push("");
 				}
-			} else if (key === "Alt ID 1") {
+			} else if (/^Alt ID \d+$/.test(key)) {
+				const altIdIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the alt ID number and convert to zero-based index
 				const altIDs = baseObjectData.getElementsByTagName("AlternateID");
-				if (altIDs.length > 0) {
-					const altIDElement = altIDs[0];
+				if (altIDs.length > altIdIndex) {
+					const altIDElement = altIDs[altIdIndex];
 					const domain =
 						altIDElement.getAttribute("domain") ||
-						altIDElement.getAttribute("xsi:type") ||
-						"";
-					const relation = altIDElement.getAttribute("relation") || "";
-					const value = altIDElement.textContent || "";
-					row.push(value);
-					row.push(domain);
-					row.push(relation);
-				} else {
-					row.push("");
-					row.push("");
-					row.push("");
-				}
-			} else if (key === "Alt ID 2") {
-				const altIDs = baseObjectData.getElementsByTagName("AlternateID");
-				if (altIDs.length > 1) {
-					const altIDElement = altIDs[1];
-					const domain =
-						altIDElement.getAttribute("domain") ||
-						altIDElement.getAttribute("xsi:type") ||
-						"";
-					const relation = altIDElement.getAttribute("relation") || "";
-					const value = altIDElement.textContent || "";
-					row.push(value);
-					row.push(domain);
-					row.push(relation);
-				} else {
-					row.push("");
-					row.push("");
-					row.push("");
-				}
-			} else if (key === "Alt ID 3") {
-				const altIDs = baseObjectData.getElementsByTagName("AlternateID");
-				if (altIDs.length > 2) {
-					const altIDElement = altIDs[2];
-					const domain =
-						altIDElement.getAttribute("domain") ||
-						altIDElement.getAttribute("xsi:type") ||
-						"";
+						altIDElement.getAttribute("xsi:type");
 					const relation = altIDElement.getAttribute("relation") || "";
 					const value = altIDElement.textContent || "";
 					row.push(value);

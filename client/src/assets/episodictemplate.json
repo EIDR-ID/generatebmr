@@ -148,43 +148,10 @@
 		"Director 2": {
 			"required": false
 		},
-		"Actor 1": {
+		"Actors": {
 			"required": false
 		},
-		"Actor 2": {
-			"required": false
-		},
-		"Actor 3": {
-			"required": false
-		},
-		"Actor 4": {
-			"required": false
-		},
-		"Alt ID 1": {
-			"required": false
-		},
-		"Domain 1": {
-			"required": false
-		},
-		"Relation 1": {
-			"required": false
-		},
-		"Alt ID 2": {
-			"required": false
-		},
-		"Domain 2": {
-			"required": false
-		},
-		"Relation 2": {
-			"required": false
-		},
-		"Alt ID 3": {
-			"required": false
-		},
-		"Domain 3": {
-			"required": false
-		},
-		"Relation 3": {
+		"Alternate": {
 			"required": false
 		},
 		"IMDb": {
@@ -268,19 +235,8 @@
 		"Registrant": "",
 		"Director 1": "",
 		"Director 2": "",
-		"Actor 1": "",
-		"Actor 2": "",
-		"Actor 3": "",
-		"Actor 4": "",
-		"Alt ID 1": "",
-		"Domain 1": "",
-		"Relation 1": "",
-		"Alt ID 2": "",
-		"Domain 2": "",
-		"Relation 2": "",
-		"Alt ID 3": "",
-		"Domain 3": "",
-		"Relation 3": "",
+		"Actors": "",
+		"Alternate": "",
 		"IMDb": "",
 		"IMDb Relation": "",
 		"ISAN": "",

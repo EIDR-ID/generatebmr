@@ -11,9 +11,9 @@ const excelToXMLMap = {
 	"Director 1": "Director",
 	"Director 2": "Director",
 
-	"Alt ID 1": "AlternateID",
-	"Alt ID 2": "AlternateID",
-	"Alt ID 3": "AlternateID",
+	// "Alt ID 1": "AlternateID",
+	// "Alt ID 2": "AlternateID",
+	// "Alt ID 3": "AlternateID",
 	"IMDb Relation": "IMDbRelation",
 	"ISAN Relation": "ISANRelation",
 	"Description Language": "DescriptionLanguage",
