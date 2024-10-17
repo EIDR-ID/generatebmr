@@ -8,7 +8,7 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 		const baseObjectData = baseElements[0]; // Assuming we're only interested in the first BaseObjectData element
 
 		dataKeys.forEach((key) => {
-			const skipPattern = /^(Domain|Relation) \d+$/;
+			const skipPattern = /^(Domain|Relation|Party ID|Role) \d+$/;
 			if (skipPattern.test(key)) {
 				return;
 			}
@@ -157,10 +157,12 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 					row.push("");
 					row.push("");
 				}
-			} else if (key === "Associated Org 1") {
-				if (baseObjectData.getElementsByTagName("AssociatedOrg").length > 0) {
-					const associatedOrgElement =
-						baseObjectData.getElementsByTagName("AssociatedOrg")[0];
+			} else if (/^Associated Org \d+$/.test(key)) {
+				const orgIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the org number and convert to zero-based index
+				const associatedOrgs =
+					baseObjectData.getElementsByTagName("AssociatedOrg");
+				if (associatedOrgs.length > orgIndex) {
+					const associatedOrgElement = associatedOrgs[orgIndex];
 					const value = associatedOrgElement
 						? associatedOrgElement.getElementsByTagName("md:DisplayName")[0]
 								.textContent
@@ -168,56 +170,12 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 					const role = associatedOrgElement
 						? associatedOrgElement.getAttribute("role")
 						: "";
-					const idType = associatedOrgElement
-						? associatedOrgElement.getAttribute("idType")
+					const partyID = associatedOrgElement
+						? associatedOrgElement.getAttribute("organizationID")
 						: "";
 					row.push(value);
 					row.push(role);
-					row.push(idType);
-				} else {
-					row.push("");
-					row.push("");
-					row.push("");
-				}
-			} else if (key === "Associated Org 2") {
-				if (baseObjectData.getElementsByTagName("AssociatedOrg").length > 1) {
-					const associatedOrgElement =
-						baseObjectData.getElementsByTagName("AssociatedOrg")[1];
-					const value = associatedOrgElement
-						? associatedOrgElement.getElementsByTagName("md:DisplayName")[0]
-								.textContent
-						: "";
-					const role = associatedOrgElement
-						? associatedOrgElement.getAttribute("role")
-						: "";
-					const idType = associatedOrgElement
-						? associatedOrgElement.getAttribute("idType")
-						: "";
-					row.push(value);
-					row.push(role);
-					row.push(idType);
-				} else {
-					row.push("");
-					row.push("");
-					row.push("");
-				}
-			} else if (key === "Associated Org 3") {
-				if (baseObjectData.getElementsByTagName("AssociatedOrg").length > 2) {
-					const associatedOrgElement =
-						baseObjectData.getElementsByTagName("AssociatedOrg")[2];
-					const value = associatedOrgElement
-						? associatedOrgElement.getElementsByTagName("md:DisplayName")[0]
-								.textContent
-						: "";
-					const role = associatedOrgElement
-						? associatedOrgElement.getAttribute("role")
-						: "";
-					const idType = associatedOrgElement
-						? associatedOrgElement.getAttribute("idType")
-						: "";
-					row.push(value);
-					row.push(role);
-					row.push(idType);
+					row.push(partyID);
 				} else {
 					row.push("");
 					row.push("");
@@ -246,7 +204,7 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 					value = foundElements[0].textContent || "";
 					row.push(value);
 				} else {
-					console.log(key, "not found in XML"); // Debugging log
+					// console.log(key, "not found in XML"); // Debugging log
 					if (!isAttributeKey(key)) {
 						row.push(""); // Push an empty string if the element was not found
 					}

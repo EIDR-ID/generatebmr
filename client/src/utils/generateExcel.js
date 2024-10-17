@@ -9,8 +9,9 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	// Prepare Excel data
 	const rows = [];
 	rows.push(["version:", "22"]); // Assuming version is static as per the requirement
-	let maxAltIDs = 3; // Maximum number of AltIDs
+	let maxAltIDs = 1; // Maximum number of AltIDs
 	let maxActors = 1;
+	let maxAssociatedOrgs = 1;
 	// Loop through xmlArray to determine the maximum number of Alt IDs
 	xmlArray.forEach((xml) => {
 		const altIDs = xml.getElementsByTagName("AlternateID");
@@ -21,32 +22,44 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 		if (actors.length > maxActors) {
 			maxActors = actors.length;
 		}
+		const associatedOrgs = xml.getElementsByTagName("AssociatedOrg");
+		if (associatedOrgs.length > maxAssociatedOrgs) {
+			maxAssociatedOrgs = associatedOrgs.length;
+		}
 	});
-	console.log("Max Alt IDs: ", maxAltIDs);
 
 	const metadataKeys = Object.keys(templateFormat.metadata);
-	console.log("Metadata Keys: ", metadataKeys);
-	const additionalIDKeyss = {};
+	// console.log("Metadata Keys: ", metadataKeys);
+	const additionalIDKeys = {};
 	const additionalActors = {};
+	const additionalAssociatedOrgs = {};
 	//Don't run if you don't need any more columns than given already.
 	for (let i = 1; i <= maxAltIDs; i++) {
-		additionalIDKeyss[`Alt ID ${i}`] = { required: "optional" };
-		additionalIDKeyss[`Domain ${i}`] = { required: "optional" };
-		additionalIDKeyss[`Relation ${i}`] = { required: "optional" };
+		additionalIDKeys[`Alt ID ${i}`] = { required: "optional" };
+		additionalIDKeys[`Domain ${i}`] = { required: "optional" };
+		additionalIDKeys[`Relation ${i}`] = { required: "optional" };
 	}
 	for (let i = 1; i <= maxActors; i++) {
 		additionalActors[`Actor ${i}`] = { required: "optional" };
 	}
+	for (let i = 1; i <= maxAssociatedOrgs; i++) {
+		additionalAssociatedOrgs[`Associated Org ${i}`] = { required: "optional" };
+		additionalAssociatedOrgs[`Role ${i}`] = { required: "optional" };
+		additionalAssociatedOrgs[`Party ID ${i}`] = { required: "optional" };
+	}
 
 	// Find the index of Unique Row ID and Relation 3
+	const associatedOrgIndex = metadataKeys.indexOf("AssociatedOrgs");
 	const alternateIndex = metadataKeys.indexOf("Alternate");
 	const actorIndex = metadataKeys.indexOf("Actors");
 
 	// Compose newMetadata
 	const newMetadata = [
-		...metadataKeys.slice(0, actorIndex),
+		...metadataKeys.slice(0, associatedOrgIndex),
+		...Object.keys(additionalAssociatedOrgs),
+		...metadataKeys.slice(associatedOrgIndex + 1, actorIndex),
 		...Object.keys(additionalActors),
-		...Object.keys(additionalIDKeyss),
+		...Object.keys(additionalIDKeys),
 		...metadataKeys.slice(alternateIndex + 1),
 	];
 
@@ -63,6 +76,7 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	const dataKeys = Object.keys(templateFormat.data);
 	const additionalDataIDKeys = {};
 	const additionalActorsData = {};
+	const additionalAssociatedOrgsData = {};
 	for (let i = 1; i <= maxAltIDs; i++) {
 		//Append new Alt ID, Domain.
 		additionalDataIDKeys[`Alt ID ${i}`] = "";
@@ -72,31 +86,35 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	for (let i = 1; i <= maxActors; i++) {
 		additionalActorsData[`Actor ${i}`] = "";
 	}
+	for (let i = 1; i <= maxAssociatedOrgs; i++) {
+		additionalAssociatedOrgsData[`Associated Org ${i}`] = "";
+		additionalAssociatedOrgsData[`Role ${i}`] = "";
+		additionalAssociatedOrgsData[`Party ID ${i}`] = "";
+	}
 	// Find the index of Unique Row ID and Relation 3
+	const dataAssociatedOrg = dataKeys.indexOf("AssociatedOrgs");
 	const dataAlternateIndex = dataKeys.indexOf("Alternate");
 	const actorDataIndex = dataKeys.indexOf("Actors");
 
 	// Compose newMetadata
 	const newData = [
-		...metadataKeys.slice(0, actorDataIndex),
+		...metadataKeys.slice(0, dataAssociatedOrg),
+		...Object.keys(additionalAssociatedOrgsData),
+		...metadataKeys.slice(dataAssociatedOrg + 1, actorDataIndex),
 		...Object.keys(additionalActorsData),
 		...Object.keys(additionalDataIDKeys),
 		...metadataKeys.slice(dataAlternateIndex + 1),
 	];
 
-	console.log("New Data: ", newData);
-
-	// Create an object to hold the key-value pairs for newData
 	const updatedDataKeyValuePairs = {};
 	newData.forEach((key) => {
 		updatedDataKeyValuePairs[key] = templateFormat.data[key] || "";
 	});
+	// console.log("Updated Data Key Value Pairs: ", updatedDataKeyValuePairs);
+	rows.push(newData); // Third row: keys from data
 
 	const updatedDataKeys = Object.keys(updatedDataKeyValuePairs);
-	const dataValues = updatedDataKeys.map(
-		(key) => updatedDataKeyValuePairs[key] || ""
-	); // Replace null with 'null' string
-	rows.push(newData); // Third row: keys from data
+	updatedDataKeys.map((key) => updatedDataKeyValuePairs[key] || ""); // Replace null with 'null' string
 	xmlArray.forEach((xml, idx) => {
 		rows.push(getDataRow(xml, updatedDataKeys, idx)); // Fourth row: values from data
 	});
