@@ -38,9 +38,9 @@ const excelToXMLMap = {
 	"Title Class": "XMLAttribute",
 	"Version Language 1": "VersionLanguage",
 	"Language Mode 1": "XMLAttribute", // The data is an attribute of Version Language 1, so marks this field as an XML attribute
-	"Alternate Title 1": "AlternateTitle1",
-	"Alt Title Language 1": "AltTitleLanguage1",
-	"Alt Title Class 1": "AltTitleClass1",
+	// "Alternate Title 1": "AlternateTitle1",
+	// "Alt Title Language 1": "AltTitleLanguage1",
+	// "Alt Title Class 1": "AltTitleClass1",
 	"Country of Origin 1": "CountryOfOrigin",
 	"Metadata Authority 1": "MetadataAuthority1",
 	"Metadata Authority Party ID 1": "MetadataAuthorityPartyID1",

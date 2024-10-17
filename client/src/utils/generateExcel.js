@@ -12,6 +12,8 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	let maxAltIDs = 1; // Maximum number of AltIDs
 	let maxActors = 1;
 	let maxAssociatedOrgs = 1;
+	let maxAlternateTitles = 2;
+	let maxCountryOfOrigin = 1;
 	// Loop through xmlArray to determine the maximum number of Alt IDs
 	xmlArray.forEach((xml) => {
 		const altIDs = xml.getElementsByTagName("AlternateID");
@@ -26,6 +28,14 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 		if (associatedOrgs.length > maxAssociatedOrgs) {
 			maxAssociatedOrgs = associatedOrgs.length;
 		}
+		const alternateTitles = xml.getElementsByTagName("AlternateResourceName");
+		if (alternateTitles.length > maxAlternateTitles) {
+			maxAlternateTitles = alternateTitles.length;
+		}
+		const countryOfOrigin = xml.getElementsByTagName("CountryOfOrigin");
+		if (countryOfOrigin.length > maxCountryOfOrigin) {
+			maxCountryOfOrigin = countryOfOrigin.length;
+		}
 	});
 
 	const metadataKeys = Object.keys(templateFormat.metadata);
@@ -33,6 +43,8 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	const additionalIDKeys = {};
 	const additionalActors = {};
 	const additionalAssociatedOrgs = {};
+	const additionalAlternateTitles = {};
+	const additionalCountries = {};
 	//Don't run if you don't need any more columns than given already.
 	for (let i = 1; i <= maxAltIDs; i++) {
 		additionalIDKeys[`Alt ID ${i}`] = { required: "optional" };
@@ -47,15 +59,32 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 		additionalAssociatedOrgs[`Role ${i}`] = { required: "optional" };
 		additionalAssociatedOrgs[`Party ID ${i}`] = { required: "optional" };
 	}
+	for (let i = 1; i <= maxAlternateTitles; i++) {
+		additionalAlternateTitles[`Alternate Title ${i}`] = {
+			required: "optional",
+		};
+		additionalAlternateTitles[`Alt Title Language ${i}`] = {
+			required: "optional",
+		};
+		additionalAlternateTitles[`Alt Title Class ${i}`] = {
+			required: "optional",
+		};
+	}
+	for (let i = 1; i <= maxCountryOfOrigin; i++) {
+		additionalCountries[`Country of Origin ${i}`] = { required: "optional" };
+	}
 
 	// Find the index of Unique Row ID and Relation 3
+	const alternateTitleIndex = metadataKeys.indexOf("AlternateResourceName");
 	const associatedOrgIndex = metadataKeys.indexOf("AssociatedOrgs");
 	const alternateIndex = metadataKeys.indexOf("Alternate");
 	const actorIndex = metadataKeys.indexOf("Actors");
 
 	// Compose newMetadata
 	const newMetadata = [
-		...metadataKeys.slice(0, associatedOrgIndex),
+		...metadataKeys.slice(0, alternateTitleIndex),
+		...Object.keys(additionalAlternateTitles),
+		...Object.keys(additionalCountries),
 		...Object.keys(additionalAssociatedOrgs),
 		...metadataKeys.slice(associatedOrgIndex + 1, actorIndex),
 		...Object.keys(additionalActors),
@@ -77,6 +106,8 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	const additionalDataIDKeys = {};
 	const additionalActorsData = {};
 	const additionalAssociatedOrgsData = {};
+	const additionalAlternateTitlesData = {};
+	const additionalCountriesData = {};
 	for (let i = 1; i <= maxAltIDs; i++) {
 		//Append new Alt ID, Domain.
 		additionalDataIDKeys[`Alt ID ${i}`] = "";
@@ -91,14 +122,25 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 		additionalAssociatedOrgsData[`Role ${i}`] = "";
 		additionalAssociatedOrgsData[`Party ID ${i}`] = "";
 	}
+	for (let i = 1; i <= maxAlternateTitles; i++) {
+		additionalAlternateTitlesData[`Alternate Title ${i}`] = "";
+		additionalAlternateTitlesData[`Alt Title Language ${i}`] = "";
+		additionalAlternateTitlesData[`Alt Title Class ${i}`] = "";
+	}
+	for (let i = 1; i <= maxCountryOfOrigin; i++) {
+		additionalCountriesData[`Country of Origin ${i}`] = "";
+	}
 	// Find the index of Unique Row ID and Relation 3
 	const dataAssociatedOrg = dataKeys.indexOf("AssociatedOrgs");
 	const dataAlternateIndex = dataKeys.indexOf("Alternate");
 	const actorDataIndex = dataKeys.indexOf("Actors");
+	const alternateTitleDataIndex = dataKeys.indexOf("AlternateResourceName");
 
 	// Compose newMetadata
 	const newData = [
-		...metadataKeys.slice(0, dataAssociatedOrg),
+		...metadataKeys.slice(0, alternateTitleDataIndex),
+		...Object.keys(additionalAlternateTitlesData),
+		...Object.keys(additionalCountriesData),
 		...Object.keys(additionalAssociatedOrgsData),
 		...metadataKeys.slice(dataAssociatedOrg + 1, actorDataIndex),
 		...Object.keys(additionalActorsData),

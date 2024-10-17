@@ -8,7 +8,8 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 		const baseObjectData = baseElements[0]; // Assuming we're only interested in the first BaseObjectData element
 
 		dataKeys.forEach((key) => {
-			const skipPattern = /^(Domain|Relation|Party ID|Role) \d+$/;
+			const skipPattern =
+				/^(Domain|Relation|Party ID|Role|Alt Title Language|Alt Title Class) \d+$/;
 			if (skipPattern.test(key)) {
 				return;
 			}
@@ -152,6 +153,30 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 						row.push("");
 						row.push("");
 					}
+				} else {
+					row.push("");
+					row.push("");
+					row.push("");
+				}
+			} else if (/^Alternate Title \d+$/.test(key)) {
+				const altTitleIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the alt title number and convert to zero-based index
+				const alternateTitles = baseObjectData.getElementsByTagName(
+					"AlternateResourceName"
+				);
+				if (alternateTitles.length > altTitleIndex) {
+					const alternateTitleElement = alternateTitles[altTitleIndex];
+					const value = alternateTitleElement
+						? alternateTitleElement.textContent
+						: "";
+					const language = alternateTitleElement
+						? alternateTitleElement.getAttribute("lang")
+						: "";
+					const titleClass = alternateTitleElement
+						? alternateTitleElement.getAttribute("titleClass")
+						: "";
+					row.push(value);
+					row.push(language);
+					row.push(titleClass);
 				} else {
 					row.push("");
 					row.push("");

@@ -28,26 +28,8 @@
 		"Language Mode 1": {
 			"required": true
 		},
-		"Alternate Title 1": {
+		"AlternateResourceName": {
 			"required": false
-		},
-		"Alt Title Language 1": {
-			"required": false
-		},
-		"Alt Title Class 1": {
-			"required": false
-		},
-		"Alternate Title 2": {
-			"required": false
-		},
-		"Alt Title Language 2": {
-			"required": false
-		},
-		"Alt Title Class 2": {
-			"required": false
-		},
-		"Country of Origin 1": {
-			"required": true
 		},
 		"AssociatedOrgs": {
 			"required": false
@@ -123,13 +105,7 @@
 		"Title Class": "",
 		"Original Language 1": "",
 		"Language Mode 1": "",
-		"Alternate Title 1": "",
-		"Alt Title Language 1": "",
-		"Alt Title Class 1": "",
-		"Alternate Title 2": "",
-		"Alt Title Language 2": "",
-		"Alt Title Class 2": "",
-		"Country of Origin 1": "",
+		"AlternateResourceName": "",
 		"AssociatedOrgs": "",
 		"Metadata Authority 1": "",
 		"Metadata Authority Party ID 1": "",
