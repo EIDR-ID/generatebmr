@@ -152,8 +152,6 @@ const App = () => {
 		const data = await response.json();
 		const text = data.xmlResp; // Changed from json() to text() to handle XML
 		// console.log("Here is the text: ", text, "\n\n");
-		const modBase = data.modXmlResp;
-		// console.log("Here is the modBase: ", modBase);
 		const parser = new DOMParser();
 		const xmlDoc = await parser.parseFromString(text, "application/xml");
 		const formatType = determineFormatType(xmlDoc);

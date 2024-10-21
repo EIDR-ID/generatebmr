@@ -17,17 +17,13 @@ const getRecordsById = async (req, res) => {
 		const { username, partyID, password, eidr_id } = body;
 
 		const finalPassword = generateSha256Hash(password);
-		let query = `https://${envId}.eidr.org/EIDR/object/${eidr_id}?type=SelfDefined`;
-		let modQuery = `https://${envId}.eidr.org/EIDR/object/modificationbase/${eidr_id}?type=CreateBasic`;
+		let query = `https://${envId}.eidr.org/EIDR/object/${eidr_id}?type=Full&followAlias=false`;
 		if (envId === "sandbox1") {
-			query = `https://sandbox1.eidr.org/EIDR/object/${eidr_id}?type=SelfDefined`;
-			modQuery = `https://sandbox1.eidr.org/EIDR/object/modificationbase/${eidr_id}?type=CreateBasic`;
+			query = `https://sandbox1.eidr.org/EIDR/object/${eidr_id}?type=Full&followAlias=false`;
 		} else if (envId === "sandbox2") {
-			query = `https://sandbox2-mirror.eidr.org/EIDR/object/${eidr_id}?type=SelfDefined`;
-			modQuery = `https://sandbox2-mirror.eidr.org/EIDR/object/modificationbase/${eidr_id}?type=CreateBasic`;
+			query = `https://sandbox2-mirror.eidr.org/EIDR/object/${eidr_id}?type=Full&followAlias=false`;
 		} else if (envId === "production") {
-			query = `https://resolve.eidr.org/EIDR/object/${eidr_id}?type=SelfDefined`;
-			modQuery = `https://resolve.eidr.org/EIDR/object/modificationbase/${eidr_id}?type=CreateBasic`;
+			query = `https://resolve.eidr.org/EIDR/object/${eidr_id}?type=Full&followAlias=false`;
 		}
 		let headers = {
 			"Content-Type": "application/xml",
@@ -40,25 +36,17 @@ const getRecordsById = async (req, res) => {
 			headers: headers,
 		});
 
-		const responseMod = await fetch(modQuery, {
-			method: "GET",
-			headers: headers,
-		});
-
 		const xmlResp = await response.text();
-		const modXmlResp = await responseMod.text();
 		// console.log("Here is xmlResp, search by resolution ID: ", xmlResp);
 		// console.log(
 		// 	"Here is modXmlResp, search by modification base: ",
 		// 	modXmlResp
 		// );
-		const containsStatusCode4 =
-			xmlResp.includes("<Code>4</Code>") ||
-			modXmlResp.includes("<Code>4</Code>");
+		const containsStatusCode4 = xmlResp.includes("<Code>4</Code>");
 		if (containsStatusCode4) {
 			res.status(401).send({ error: "Unauthorized" });
 		} else {
-			res.status(200).json({ xmlResp, modXmlResp }); // Correctly set the content type and send the XML response
+			res.status(200).json({ xmlResp }); // Correctly set the content type and send the XML response
 		}
 	} catch (error) {
 		console.log("You have received a ", error);
