@@ -14,6 +14,7 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	let maxAssociatedOrgs = 1;
 	let maxAlternateTitles = 2;
 	let maxCountryOfOrigin = 1;
+	let maxMetadataAuthority = 1;
 	// Loop through xmlArray to determine the maximum number of Alt IDs
 	xmlArray.forEach((xml) => {
 		const altIDs = xml.getElementsByTagName("AlternateID");
@@ -36,6 +37,10 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 		if (countryOfOrigin.length > maxCountryOfOrigin) {
 			maxCountryOfOrigin = countryOfOrigin.length;
 		}
+		const metadataAuthority = xml.getElementsByTagName("MetadataAuthority");
+		if (metadataAuthority.length > maxMetadataAuthority) {
+			maxMetadataAuthority = metadataAuthority.length;
+		}
 	});
 
 	const metadataKeys = Object.keys(templateFormat.metadata);
@@ -45,6 +50,7 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	const additionalAssociatedOrgs = {};
 	const additionalAlternateTitles = {};
 	const additionalCountries = {};
+	const additionalMetadataAuthorities = {};
 	//Don't run if you don't need any more columns than given already.
 	for (let i = 1; i <= maxAltIDs; i++) {
 		additionalIDKeys[`Alt ID ${i}`] = { required: "optional" };
@@ -73,12 +79,21 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	for (let i = 1; i <= maxCountryOfOrigin; i++) {
 		additionalCountries[`Country of Origin ${i}`] = { required: "optional" };
 	}
+	for (let i = 1; i <= maxMetadataAuthority; i++) {
+		additionalMetadataAuthorities[`Metadata Authority ${i}`] = {
+			required: "optional",
+		};
+		additionalMetadataAuthorities[`Metadata Authority Party ID ${i}`] = {
+			required: "optional",
+		};
+	}
 
 	// Find the index of Unique Row ID and Relation 3
 	const alternateTitleIndex = metadataKeys.indexOf("AlternateResourceName");
 	const associatedOrgIndex = metadataKeys.indexOf("AssociatedOrgs");
 	const alternateIndex = metadataKeys.indexOf("Alternate");
 	const actorIndex = metadataKeys.indexOf("Actors");
+	const additionalMetaDataIndex = metadataKeys.indexOf("MetadataAuthority");
 
 	// Compose newMetadata
 	const newMetadata = [
@@ -86,6 +101,7 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 		...Object.keys(additionalAlternateTitles),
 		...Object.keys(additionalCountries),
 		...Object.keys(additionalAssociatedOrgs),
+		...Object.keys(additionalMetadataAuthorities),
 		...metadataKeys.slice(associatedOrgIndex + 1, actorIndex),
 		...Object.keys(additionalActors),
 		...Object.keys(additionalIDKeys),
@@ -108,6 +124,7 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	const additionalAssociatedOrgsData = {};
 	const additionalAlternateTitlesData = {};
 	const additionalCountriesData = {};
+	const additionalMetadataAuthoritiesData = {};
 	for (let i = 1; i <= maxAltIDs; i++) {
 		//Append new Alt ID, Domain.
 		additionalDataIDKeys[`Alt ID ${i}`] = "";
@@ -130,11 +147,16 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	for (let i = 1; i <= maxCountryOfOrigin; i++) {
 		additionalCountriesData[`Country of Origin ${i}`] = "";
 	}
+	for (let i = 1; i <= maxMetadataAuthority; i++) {
+		additionalMetadataAuthoritiesData[`Metadata Authority ${i}`] = "";
+		additionalMetadataAuthoritiesData[`Metadata Authority Party ID ${i}`] = "";
+	}
 	// Find the index of Unique Row ID and Relation 3
 	const dataAssociatedOrg = dataKeys.indexOf("AssociatedOrgs");
 	const dataAlternateIndex = dataKeys.indexOf("Alternate");
 	const actorDataIndex = dataKeys.indexOf("Actors");
 	const alternateTitleDataIndex = dataKeys.indexOf("AlternateResourceName");
+	const additionalMetaDataIndexData = dataKeys.indexOf("MetadataAuthority");
 
 	// Compose newMetadata
 	const newData = [
@@ -142,7 +164,8 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 		...Object.keys(additionalAlternateTitlesData),
 		...Object.keys(additionalCountriesData),
 		...Object.keys(additionalAssociatedOrgsData),
-		...metadataKeys.slice(dataAssociatedOrg + 1, actorDataIndex),
+		...Object.keys(additionalMetadataAuthoritiesData),
+		...metadataKeys.slice(additionalMetaDataIndexData + 1, actorDataIndex),
 		...Object.keys(additionalActorsData),
 		...Object.keys(additionalDataIDKeys),
 		...metadataKeys.slice(dataAlternateIndex + 1),

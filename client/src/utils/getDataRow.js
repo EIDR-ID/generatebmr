@@ -9,7 +9,7 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 
 		dataKeys.forEach((key) => {
 			const skipPattern =
-				/^(Domain|Relation|Party ID|Role|Alt Title Language|Alt Title Class) \d+$/;
+				/^(Domain|Relation|Party ID|Role|Alt Title Language|Alt Title Class|Metadata Authority Party ID) \d+$/;
 			if (skipPattern.test(key)) {
 				return;
 			}
@@ -221,6 +221,40 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 					row.push(relation);
 				} else {
 					row.push("");
+					row.push("");
+					row.push("");
+				}
+			} else if (/^Alt ID \d+$/.test(key)) {
+				const adminIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the alt ID number and convert to zero-based index
+				const altIDs = baseObjectData.getElementsByTagName("AlternateID");
+				if (altIDs.length > altIdIndex) {
+					const altIDElement = altIDs[altIdIndex];
+					const domain =
+						altIDElement.getAttribute("domain") ||
+						altIDElement.getAttribute("xsi:type");
+					const relation = altIDElement.getAttribute("relation") || "";
+					const value = altIDElement.textContent || "";
+					row.push(value);
+					row.push(domain);
+					row.push(relation);
+				} else {
+					row.push("");
+					row.push("");
+					row.push("");
+				}
+			} else if (/^Metadata Authority \d+$/.test(key)) {
+				const metadataAuthorityIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the metadata authority number and convert to zero-based index
+				const metadataAuthorities =
+					baseObjectData.getElementsByTagName("MetadataAuthority");
+				if (metadataAuthorities.length > metadataAuthorityIndex) {
+					const metadataAuthorityElement =
+						metadataAuthorities[metadataAuthorityIndex];
+					const value = metadataAuthorityElement
+						? metadataAuthorityElement.textContent
+						: "";
+					row.push("User defines the name");
+					row.push(value);
+				} else {
 					row.push("");
 					row.push("");
 				}
