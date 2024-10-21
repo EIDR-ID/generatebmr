@@ -19,28 +19,13 @@
 		"In 3D": {
 			"required": true
 		},
-		"Edit Class 1": {
+		"EditClass": {
 			"required": false
 		},
-		"Edit Class 2": {
+		"MadeForRegion": {
 			"required": false
 		},
-		"Edit Class 3": {
-			"required": false
-		},
-		"Made for Region 1": {
-			"required": false
-		},
-		"Made for Region 2": {
-			"required": false
-		},
-		"Made for Region 3": {
-			"required": false
-		},
-		"Edit Details 1": {
-			"required": false
-		},
-		"Edit Details Domain 1": {
+		"EditDetails": {
 			"required": false
 		},
 		"Structural Type": {
@@ -129,14 +114,9 @@
 		"Edit Use": "",
 		"Color Type": "",
 		"In 3D": "",
-		"Edit Class 1": "",
-		"Edit Class 2": "",
-		"Edit Class 3": "",
-		"Made for Region 1": "",
-		"Made for Region 2": "",
-		"Made for Region 3": "",
-		"Edit Details 1": "",
-		"Edit Details Domain 1": "",
+		"EditClass": "",
+		"MadeForRegion": "",
+		"EditDetails": "",
 		"Structural Type": "",
 		"Referent Type": "",
 		"Title": "",

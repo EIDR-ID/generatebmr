@@ -9,7 +9,7 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 
 		dataKeys.forEach((key) => {
 			const skipPattern =
-				/^(Domain|Relation|Party ID|Role|Alt Title Language|Alt Title Class|Metadata Authority Party ID) \d+$/;
+				/^(Domain|Relation|Party ID|Role|Alt Title Language|Alt Title Class|Metadata Authority Party ID|Edit Domain) \d+$/;
 			if (skipPattern.test(key)) {
 				return;
 			}
@@ -37,43 +37,21 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 								.textContent
 						: "";
 				row.push(value);
-			} else if (key === "Edit Class 1") {
+			} else if (/^Edit Class \d+$/.test(key)) {
+				const editClassIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the edit class number and convert to zero-based index
+				const editClasses = baseObjectData.getElementsByTagName("EditClass");
 				value =
-					baseObjectData.getElementsByTagName("EditClass").length > 0
-						? baseObjectData.getElementsByTagName("EditClass")[0].textContent
+					editClasses.length > editClassIndex
+						? editClasses[editClassIndex].textContent
 						: "";
 				row.push(value);
-			} else if (key === "Edit Class 2") {
+			} else if (/^Made for Region \d+$/.test(key)) {
+				const regionIndex = parseInt(key.split(" ")[3], 10) - 1; // Extract the region number and convert to zero-based index
+				const madeForRegions =
+					baseObjectData.getElementsByTagName("MadeForRegion");
 				value =
-					baseObjectData.getElementsByTagName("EditClass").length > 1
-						? baseObjectData.getElementsByTagName("EditClass")[1].textContent
-						: "";
-				row.push(value);
-			} else if (key === "Edit Class 3") {
-				value =
-					baseObjectData.getElementsByTagName("EditClass").length > 2
-						? baseObjectData.getElementsByTagName("EditClass")[2].textContent
-						: "";
-				row.push(value);
-			} else if (key === "Made for Region 1") {
-				value =
-					baseObjectData.getElementsByTagName("MadeForRegion").length > 0
-						? baseObjectData.getElementsByTagName("MadeForRegion")[0]
-								.textContent
-						: "";
-				row.push(value);
-			} else if (key === "Made for Region 2") {
-				value =
-					baseObjectData.getElementsByTagName("MadeForRegion").length > 1
-						? baseObjectData.getElementsByTagName("MadeForRegion")[1]
-								.textContent
-						: "";
-				row.push(value);
-			} else if (key === "Made for Region 3") {
-				value =
-					baseObjectData.getElementsByTagName("MadeForRegion").length > 2
-						? baseObjectData.getElementsByTagName("MadeForRegion")[2]
-								.textContent
+					madeForRegions.length > regionIndex
+						? madeForRegions[regionIndex].textContent
 						: "";
 				row.push(value);
 			} else if (key === "Assigned EIDR ID") {
@@ -82,10 +60,11 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 						? baseObjectData.getElementsByTagName("ID")[0].textContent
 						: "";
 				row.push(value);
-			} else if (key === "Edit Details 1") {
-				if (baseObjectData.getElementsByTagName("EditDetails").length > 0) {
-					const editDetailsElement =
-						baseObjectData.getElementsByTagName("EditDetails")[0];
+			} else if (/^Edit Details \d+$/.test(key)) {
+				const editDetailsIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the edit details number and convert to zero-based index
+				const editDetails = baseObjectData.getElementsByTagName("EditDetails");
+				if (editDetails.length > editDetailsIndex) {
+					const editDetailsElement = editDetails[editDetailsIndex];
 					const domain = editDetailsElement
 						? editDetailsElement.getAttribute("domain")
 						: "";
@@ -224,24 +203,6 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 					row.push("");
 					row.push("");
 				}
-			} else if (/^Alt ID \d+$/.test(key)) {
-				const adminIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the alt ID number and convert to zero-based index
-				const altIDs = baseObjectData.getElementsByTagName("AlternateID");
-				if (altIDs.length > altIdIndex) {
-					const altIDElement = altIDs[altIdIndex];
-					const domain =
-						altIDElement.getAttribute("domain") ||
-						altIDElement.getAttribute("xsi:type");
-					const relation = altIDElement.getAttribute("relation") || "";
-					const value = altIDElement.textContent || "";
-					row.push(value);
-					row.push(domain);
-					row.push(relation);
-				} else {
-					row.push("");
-					row.push("");
-					row.push("");
-				}
 			} else if (/^Metadata Authority \d+$/.test(key)) {
 				const metadataAuthorityIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the metadata authority number and convert to zero-based index
 				const metadataAuthorities =
@@ -252,7 +213,7 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 					const value = metadataAuthorityElement
 						? metadataAuthorityElement.textContent
 						: "";
-					row.push("User defines the name");
+					row.push("");
 					row.push(value);
 				} else {
 					row.push("");
