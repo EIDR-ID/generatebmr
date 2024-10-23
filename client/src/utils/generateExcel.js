@@ -26,6 +26,9 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	const actorIndex = metadataKeys.indexOf("Actors");
 	const additionalMetaDataIndex = metadataKeys.indexOf("MetadataAuthority");
 	const alternatenoIndex = metadataKeys.indexOf("AlternateNo.");
+	const seasonClassIndex = metadataKeys.indexOf("SeasonClass");
+	const episodeClassIndex = metadataKeys.indexOf("EpisodeClass");
+	const directorIndex = metadataKeys.indexOf("Directors");
 
 	// Compose newMetadata
 	let newMetadata = [];
@@ -41,7 +44,8 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 			...Object.keys(additionalHeaders.additionalAlternateTitles),
 			...Object.keys(additionalHeaders.additionalAssociatedOrgs),
 			...Object.keys(additionalHeaders.additionalMetadataAuthorities),
-			...metadataKeys.slice(additionalMetaDataIndex + 1, actorIndex),
+			...metadataKeys.slice(additionalMetaDataIndex + 1, directorIndex),
+			...Object.keys(additionalHeaders.additionalDirectors),
 			...Object.keys(additionalHeaders.additionalActors),
 			...Object.keys(additionalHeaders.additionalIDKeys),
 			...metadataKeys.slice(alternateIndex + 1),
@@ -53,9 +57,13 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 			...Object.keys(additionalHeaders.additionalAlternateTitles),
 			...Object.keys(additionalHeaders.additionalAssociatedOrgs),
 			...Object.keys(additionalHeaders.additionalMetadataAuthorities),
-			...metadataKeys.slice(additionalMetaDataIndex + 1, alternatenoIndex),
+			...metadataKeys.slice(additionalMetaDataIndex + 1, seasonClassIndex),
+			...Object.keys(additionalHeaders.additionalSeasonClass),
+			...Object.keys(additionalHeaders.additionalEpisodeClass),
+			...metadataKeys.slice(episodeClassIndex + 1, alternatenoIndex),
 			...Object.keys(additionalHeaders.additionalAlternateNumbers),
-			...metadataKeys.slice(alternatenoIndex + 1, actorIndex),
+			...metadataKeys.slice(alternatenoIndex + 1, directorIndex),
+			...Object.keys(additionalHeaders.additionalDirectors),
 			...Object.keys(additionalHeaders.additionalActors),
 			...Object.keys(additionalHeaders.additionalIDKeys),
 			...metadataKeys.slice(alternateIndex + 1),
@@ -68,7 +76,8 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 			...Object.keys(additionalHeaders.additionalCountries),
 			...Object.keys(additionalHeaders.additionalAssociatedOrgs),
 			...Object.keys(additionalHeaders.additionalMetadataAuthorities),
-			...metadataKeys.slice(associatedOrgIndex + 1, actorIndex),
+			...metadataKeys.slice(associatedOrgIndex + 1, directorIndex),
+			...Object.keys(additionalHeaders.additionalDirectors),
 			...Object.keys(additionalHeaders.additionalActors),
 			...Object.keys(additionalHeaders.additionalIDKeys),
 			...metadataKeys.slice(alternateIndex + 1),
@@ -95,6 +104,8 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	const alternateTitleDataIndex = dataKeys.indexOf("AlternateResourceName");
 	const additionalMetaDataIndexData = dataKeys.indexOf("MetadataAuthority");
 	const alternateNoIndexData = dataKeys.indexOf("AlternateNo.");
+	const seasonClassDataIndex = dataKeys.indexOf("SeasonClass");
+	const episodeClassDataIndex = dataKeys.indexOf("EpisodeClass");
 	let newData = [];
 	// Compose newMetadata
 	if (templateFormat === editTemplateFormat) {
@@ -124,8 +135,11 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 			...Object.keys(additionalData.additionalMetadataAuthoritiesData),
 			...metadataKeys.slice(
 				additionalMetaDataIndexData + 1,
-				alternateNoIndexData
+				seasonClassDataIndex
 			),
+			...Object.keys(additionalData.additionalSeasonClassData),
+			...Object.keys(additionalData.additionalEpisodeClassData),
+			...metadataKeys.slice(episodeClassDataIndex + 1, alternateNoIndexData),
 			...Object.keys(additionalData.additionalAlternateNumbersData),
 			...metadataKeys.slice(alternateNoIndexData + 1, directorDataIndex),
 			...Object.keys(additionalData.additionalDirectorsData),

@@ -49,10 +49,10 @@
 		"Series Class": {
 			"required": false
 		},
-		"Season Class 1": {
+		"SeasonClass": {
 			"required": false
 		},
-		"Episode Class 1": {
+		"EpisodeClass": {
 			"required": false
 		},
 		"Number Required": {
@@ -148,8 +148,8 @@
 		"End Date": "",
 		"Time Slot": "",
 		"Series Class": "",
-		"Season Class 1": "",
-		"Episode Class 1": "",
+		"SeasonClass": "",
+		"EpisodeClass": "",
 		"Number Required": "",
 		"Date Required": "",
 		"Original Title Required": "",

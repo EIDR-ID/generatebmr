@@ -13,6 +13,9 @@ const generateAdditionalData = (maxHeaders) => {
 	const additionalAlternateNumbersData = {};
 	const additionalDirectorsData = {};
 
+	const additionalSeasonClassData = {};
+	const additionalEpisodeClassData = {};
+
 	for (let i = 1; i <= maxHeaders.maxAltIDs; i++) {
 		// Append new Alt ID, Domain.
 		additionalDataIDKeys[`Alt ID ${i}`] = "";
@@ -63,6 +66,14 @@ const generateAdditionalData = (maxHeaders) => {
 		additionalDirectorsData[`Director ${i}`] = "";
 	}
 
+	for (let i = 1; i <= maxHeaders.maxSeasonClass; i++) {
+		additionalSeasonClassData[`Season Class ${i}`] = "";
+	}
+
+	for (let i = 1; i <= maxHeaders.maxEpisodeClass; i++) {
+		additionalEpisodeClassData[`Episode Class ${i}`] = "";
+	}
+
 	return {
 		additionalDataIDKeys,
 		additionalActorsData,
@@ -77,6 +88,8 @@ const generateAdditionalData = (maxHeaders) => {
 		additionalAlternateNumbersData,
 		additionalActorsData,
 		additionalDirectorsData,
+		additionalSeasonClassData,
+		additionalEpisodeClassData,
 	};
 };
 

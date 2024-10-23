@@ -11,6 +11,8 @@ const getMaxCols = (xmlArray) => {
 	let maxOriginalLanguage = 1;
 	let maxAlternateNumbers = 1;
 	let maxDirectors = 1;
+	let maxSeasonClass = 1;
+	let maxEpisodeClass = 1;
 	xmlArray.forEach((xml) => {
 		const altIDs = xml.getElementsByTagName("AlternateID");
 		if (altIDs.length > maxAltIDs) {
@@ -60,6 +62,14 @@ const getMaxCols = (xmlArray) => {
 		if (directors.length > maxDirectors) {
 			maxDirectors = directors.length;
 		}
+		const seasonClass = xml.getElementsByTagName("SeasonClass");
+		if (seasonClass.length > maxSeasonClass) {
+			maxSeasonClass = seasonClass.length;
+		}
+		const episodeClass = xml.getElementsByTagName("EpisodeClass");
+		if (episodeClass.length > maxEpisodeClass) {
+			maxEpisodeClass = episodeClass.length;
+		}
 	});
 	return {
 		maxAltIDs,
@@ -74,6 +84,8 @@ const getMaxCols = (xmlArray) => {
 		maxOriginalLanguage,
 		maxAlternateNumbers,
 		maxDirectors,
+		maxSeasonClass,
+		maxEpisodeClass,
 	};
 };
 
