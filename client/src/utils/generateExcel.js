@@ -20,10 +20,12 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	const additionalHeaders = addAdditionalHeaders(maxHeaders);
 	// Find the index of Unique Row ID and Relation 3
 	const alternateTitleIndex = metadataKeys.indexOf("AlternateResourceName");
+	const originalLanguageIndex = metadataKeys.indexOf("OriginalLanguage");
 	const associatedOrgIndex = metadataKeys.indexOf("AssociatedOrgs");
 	const alternateIndex = metadataKeys.indexOf("Alternate");
 	const actorIndex = metadataKeys.indexOf("Actors");
 	const additionalMetaDataIndex = metadataKeys.indexOf("MetadataAuthority");
+	const alternatenoIndex = metadataKeys.indexOf("AlternateNo.");
 
 	// Compose newMetadata
 	let newMetadata = [];
@@ -44,9 +46,24 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 			...Object.keys(additionalHeaders.additionalIDKeys),
 			...metadataKeys.slice(alternateIndex + 1),
 		];
+	} else if (templateFormat === episodicTemplate) {
+		newMetadata = [
+			...metadataKeys.slice(0, originalLanguageIndex),
+			...Object.keys(additionalHeaders.additionalOriginalLanguages),
+			...Object.keys(additionalHeaders.additionalAlternateTitles),
+			...Object.keys(additionalHeaders.additionalAssociatedOrgs),
+			...Object.keys(additionalHeaders.additionalMetadataAuthorities),
+			...metadataKeys.slice(additionalMetaDataIndex + 1, alternatenoIndex),
+			...Object.keys(additionalHeaders.additionalAlternateNumbers),
+			...metadataKeys.slice(alternatenoIndex + 1, actorIndex),
+			...Object.keys(additionalHeaders.additionalActors),
+			...Object.keys(additionalHeaders.additionalIDKeys),
+			...metadataKeys.slice(alternateIndex + 1),
+		];
 	} else {
 		newMetadata = [
-			...metadataKeys.slice(0, alternateTitleIndex),
+			...metadataKeys.slice(0, originalLanguageIndex),
+			...Object.keys(additionalHeaders.additionalOriginalLanguages),
 			...Object.keys(additionalHeaders.additionalAlternateTitles),
 			...Object.keys(additionalHeaders.additionalCountries),
 			...Object.keys(additionalHeaders.additionalAssociatedOrgs),
@@ -70,11 +87,14 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	const dataKeys = Object.keys(templateFormat.data);
 	const additionalData = generateAdditionalData(maxHeaders);
 	// Find the index of Unique Row ID and Relation 3
+	const dataAdditionalOriginalLanguageIndex =
+		dataKeys.indexOf("OriginalLanguage");
 	const dataAssociatedOrg = dataKeys.indexOf("AssociatedOrgs");
 	const dataAlternateIndex = dataKeys.indexOf("Alternate");
 	const actorDataIndex = dataKeys.indexOf("Actors");
 	const alternateTitleDataIndex = dataKeys.indexOf("AlternateResourceName");
 	const additionalMetaDataIndexData = dataKeys.indexOf("MetadataAuthority");
+	const alternateNoIndexData = dataKeys.indexOf("AlternateNo.");
 	let newData = [];
 	// Compose newMetadata
 	if (templateFormat === editTemplateFormat) {
@@ -94,9 +114,27 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 			...Object.keys(additionalData.additionalDataIDKeys),
 			...metadataKeys.slice(dataAlternateIndex + 1),
 		];
+	} else if (templateFormat === episodicTemplate) {
+		newData = [
+			...metadataKeys.slice(0, dataAdditionalOriginalLanguageIndex),
+			...Object.keys(additionalData.additionalOriginalLanguageData),
+			...Object.keys(additionalData.additionalAlternateTitlesData),
+			...Object.keys(additionalData.additionalAssociatedOrgsData),
+			...Object.keys(additionalData.additionalMetadataAuthoritiesData),
+			...metadataKeys.slice(
+				additionalMetaDataIndexData + 1,
+				alternateNoIndexData
+			),
+			...Object.keys(additionalData.additionalAlternateNumbersData),
+			...metadataKeys.slice(alternateNoIndexData + 1, actorDataIndex),
+			...Object.keys(additionalData.additionalActorsData),
+			...Object.keys(additionalData.additionalDataIDKeys),
+			...metadataKeys.slice(dataAlternateIndex + 1),
+		];
 	} else {
 		newData = [
-			...metadataKeys.slice(0, alternateTitleDataIndex),
+			...metadataKeys.slice(0, dataAdditionalOriginalLanguageIndex),
+			...Object.keys(additionalData.additionalOriginalLanguageData),
 			...Object.keys(additionalData.additionalAlternateTitlesData),
 			...Object.keys(additionalData.additionalCountriesData),
 			...Object.keys(additionalData.additionalAssociatedOrgsData),

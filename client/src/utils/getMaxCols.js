@@ -8,6 +8,8 @@ const getMaxCols = (xmlArray) => {
 	let maxEditClass = 1;
 	let maxEditDetails = 1;
 	let maxMadeForRegion = 1;
+	let maxOriginalLanguage = 1;
+	let maxAlternateNumbers = 1;
 	xmlArray.forEach((xml) => {
 		const altIDs = xml.getElementsByTagName("AlternateID");
 		if (altIDs.length > maxAltIDs) {
@@ -45,6 +47,14 @@ const getMaxCols = (xmlArray) => {
 		if (madeForRegion.length > maxMadeForRegion) {
 			maxMadeForRegion = madeForRegion.length;
 		}
+		const originalLanguage = xml.getElementsByTagName("OriginalLanguage");
+		if (originalLanguage.length > maxOriginalLanguage) {
+			maxOriginalLanguage = originalLanguage.length;
+		}
+		const alternateNumbers = xml.getElementsByTagName("md:AlternateNumber");
+		if (alternateNumbers.length > maxAlternateNumbers) {
+			maxAlternateNumbers = alternateNumbers.length;
+		}
 	});
 	return {
 		maxAltIDs,
@@ -53,9 +63,11 @@ const getMaxCols = (xmlArray) => {
 		maxAlternateTitles,
 		maxCountryOfOrigin,
 		maxMetadataAuthority,
-		maxEditClass,
+		maxEditClass, //For Edits template
 		maxEditDetails,
 		maxMadeForRegion,
+		maxOriginalLanguage,
+		maxAlternateNumbers,
 	};
 };
 

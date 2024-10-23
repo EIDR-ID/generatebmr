@@ -9,6 +9,8 @@ const addDataKeys = (maxHeaders) => {
 		maxEditClass,
 		maxEditDetails,
 		maxMadeForRegion,
+		maxOriginalLanguage,
+		maxAlternateNumbers,
 	} = maxHeaders;
 	const additionalIDKeys = {};
 	const additionalActors = {};
@@ -19,6 +21,9 @@ const addDataKeys = (maxHeaders) => {
 	const additionalEditClass = {};
 	const additionalEditDetails = {};
 	const additionalMadeForRegion = {};
+
+	const additionalOriginalLanguages = {};
+	const additionalAlternateNumbers = {};
 
 	// Don't run if you don't need any more columns than given already.
 	for (let i = 1; i <= maxAltIDs; i++) {
@@ -67,6 +72,23 @@ const addDataKeys = (maxHeaders) => {
 		additionalMadeForRegion[`Made for Region ${i}`] = { required: "optional" };
 	}
 
+	for (let i = 1; i <= maxOriginalLanguage; i++) {
+		additionalOriginalLanguages[`Original Language ${i}`] = {
+			required: "optional",
+		};
+		additionalOriginalLanguages[`Language Mode ${i}`] = {
+			required: "optional",
+		};
+	}
+	for (let i = 1; i <= maxAlternateNumbers; i++) {
+		additionalAlternateNumbers[`Alternate No. ${i}`] = {
+			required: "optional",
+		};
+		additionalAlternateNumbers[`Alternate No. Domain ${i}`] = {
+			required: "optional",
+		};
+	}
+
 	return {
 		additionalIDKeys,
 		additionalActors,
@@ -77,6 +99,8 @@ const addDataKeys = (maxHeaders) => {
 		additionalEditClass,
 		additionalEditDetails,
 		additionalMadeForRegion,
+		additionalOriginalLanguages,
+		additionalAlternateNumbers,
 	};
 };
 

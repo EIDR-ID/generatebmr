@@ -25,10 +25,7 @@
 		"Title Class": {
 			"required": false
 		},
-		"Original Language 1": {
-			"required": false
-		},
-		"Language Mode 1": {
+		"OriginalLanguage": {
 			"required": false
 		},
 		"AlternateResourceName": {
@@ -82,10 +79,7 @@
 		"House No. Domain": {
 			"required": false
 		},
-		"Alternate No. 1": {
-			"required": false
-		},
-		"Alt. No. Domain 1": {
+		"AlternateNo.": {
 			"required": false
 		},
 		"Publication Status": {
@@ -149,8 +143,7 @@
 		"Title": "",
 		"Title Language": "",
 		"Title Class": "",
-		"Original Language 1": "",
-		"Language Mode 1": "",
+		"OriginalLanguage": "",
 		"AlternateResourceName": "",
 		"AssociatedOrgs": "",
 		"MetadataAuthority": "",
@@ -168,8 +161,7 @@
 		"Dist. No. Domain": "",
 		"House No.": "",
 		"House No. Domain": "",
-		"Alternate No. 1": "",
-		"Alt. No. Domain 1": "",
+		"AlternateNo.": "",
 		"Publication Status": "",
 		"Approx Length": "",
 		"Registrant": "",

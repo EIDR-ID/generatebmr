@@ -9,7 +9,7 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 
 		dataKeys.forEach((key) => {
 			const skipPattern =
-				/^(Domain|Relation|Party ID|Role|Alt Title Language|Alt Title Class|Metadata Authority Party ID|Edit Domain) \d+$/;
+				/^(Domain|Relation|Party ID|Role|Alt Title Language|Alt Title Class|Metadata Authority Party ID|Edit Domain|Language Mode|Alternate No. Domain) \d+$/;
 			if (skipPattern.test(key)) {
 				return;
 			}
@@ -93,12 +93,12 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 					row.push("");
 					row.push("");
 				}
-			} else if (key === "Original Language 1") {
-				if (
-					baseObjectData.getElementsByTagName("OriginalLanguage").length > 0
-				) {
-					const originalLanguageElement =
-						baseObjectData.getElementsByTagName("OriginalLanguage")[0];
+			} else if (/^Original Language \d+$/.test(key)) {
+				const languageIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the language number and convert to zero-based index
+				const originalLanguages =
+					baseObjectData.getElementsByTagName("OriginalLanguage");
+				if (originalLanguages.length > languageIndex) {
+					const originalLanguageElement = originalLanguages[languageIndex];
 					const mode = originalLanguageElement
 						? originalLanguageElement.getAttribute("mode")
 						: "";
@@ -218,6 +218,20 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 				} else {
 					row.push("");
 					row.push("");
+				}
+			} else if (/^Alternate No. \d+$/.test(key)) {
+				const alternateNoIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the alternate number and convert to zero-based index
+				const alternateNumbers =
+					baseObjectData.getElementsByTagName("md:AlternateNumber");
+				if (alternateNumbers.length > alternateNoIndex) {
+					const alternateNumberElement = alternateNumbers[alternateNoIndex];
+					const domain = alternateNumberElement.getAttribute("domain") || "";
+					const value = alternateNumberElement.textContent || "";
+					row.push(value);
+					row.push(domain);
+				} else {
+					row.push("Found");
+					row.push("Domain");
 				}
 			} else {
 				if (foundElements.length > 0) {

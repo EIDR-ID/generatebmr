@@ -9,6 +9,9 @@ const generateAdditionalData = (maxHeaders) => {
 	const additionalEditDetailsData = {};
 	const additionalMadeForRegionData = {};
 
+	const additionalOriginalLanguageData = {};
+	const additionalAlternateNumbersData = {};
+
 	for (let i = 1; i <= maxHeaders.maxAltIDs; i++) {
 		// Append new Alt ID, Domain.
 		additionalDataIDKeys[`Alt ID ${i}`] = "";
@@ -46,6 +49,15 @@ const generateAdditionalData = (maxHeaders) => {
 		additionalMadeForRegionData[`Made for Region ${i}`] = "";
 	}
 
+	for (let i = 1; i <= maxHeaders.maxOriginalLanguage; i++) {
+		additionalOriginalLanguageData[`Original Language ${i}`] = "";
+		additionalOriginalLanguageData[`Language Mode ${i}`] = "";
+	}
+	for (let i = 1; i <= maxHeaders.maxAlternateNumbers; i++) {
+		additionalAlternateNumbersData[`Alternate No. ${i}`] = "";
+		additionalAlternateNumbersData[`Alternate No. Domain ${i}`] = "";
+	}
+
 	return {
 		additionalDataIDKeys,
 		additionalActorsData,
@@ -56,6 +68,8 @@ const generateAdditionalData = (maxHeaders) => {
 		additionalEditClassData,
 		additionalEditDetailsData,
 		additionalMadeForRegionData,
+		additionalOriginalLanguageData,
+		additionalAlternateNumbersData,
 	};
 };
 

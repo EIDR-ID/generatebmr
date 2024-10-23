@@ -22,10 +22,7 @@
 		"Title Class": {
 			"required": false
 		},
-		"Original Language 1": {
-			"required": true
-		},
-		"Language Mode 1": {
+		"OriginalLanguage": {
 			"required": true
 		},
 		"AlternateResourceName": {
@@ -100,8 +97,7 @@
 		"Title": "",
 		"Title Language": "",
 		"Title Class": "",
-		"Original Language 1": "",
-		"Language Mode 1": "",
+		"OriginalLanguage": "",
 		"AlternateResourceName": "",
 		"AssociatedOrgs": "",
 		"MetadataAuthority": "",
