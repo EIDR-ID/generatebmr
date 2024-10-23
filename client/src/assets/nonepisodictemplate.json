@@ -46,10 +46,7 @@
 		"Registrant": {
 			"required": false
 		},
-		"Director 1": {
-			"required": false
-		},
-		"Director 2": {
+		"Directors": {
 			"required": false
 		},
 		"Actors": {
@@ -105,8 +102,7 @@
 		"Publication Status": "",
 		"Approx Length": "",
 		"Registrant": "",
-		"Director 1": "",
-		"Director 2": "",
+		"Directors": "",
 		"Actors": "",
 		"Alternate": "",
 		"IMDb": "",

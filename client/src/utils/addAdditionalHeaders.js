@@ -11,6 +11,7 @@ const addDataKeys = (maxHeaders) => {
 		maxMadeForRegion,
 		maxOriginalLanguage,
 		maxAlternateNumbers,
+		maxDirectors,
 	} = maxHeaders;
 	const additionalIDKeys = {};
 	const additionalActors = {};
@@ -24,6 +25,7 @@ const addDataKeys = (maxHeaders) => {
 
 	const additionalOriginalLanguages = {};
 	const additionalAlternateNumbers = {};
+	const additionalDirectors = {};
 
 	// Don't run if you don't need any more columns than given already.
 	for (let i = 1; i <= maxAltIDs; i++) {
@@ -88,6 +90,9 @@ const addDataKeys = (maxHeaders) => {
 			required: "optional",
 		};
 	}
+	for (let i = 1; i <= maxDirectors; i++) {
+		additionalDirectors[`Director ${i}`] = { required: "optional" };
+	}
 
 	return {
 		additionalIDKeys,
@@ -101,6 +106,7 @@ const addDataKeys = (maxHeaders) => {
 		additionalMadeForRegion,
 		additionalOriginalLanguages,
 		additionalAlternateNumbers,
+		additionalDirectors,
 	};
 };
 

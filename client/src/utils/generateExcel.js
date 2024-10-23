@@ -91,7 +91,7 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 		dataKeys.indexOf("OriginalLanguage");
 	const dataAssociatedOrg = dataKeys.indexOf("AssociatedOrgs");
 	const dataAlternateIndex = dataKeys.indexOf("Alternate");
-	const actorDataIndex = dataKeys.indexOf("Actors");
+	const directorDataIndex = dataKeys.indexOf("Directors");
 	const alternateTitleDataIndex = dataKeys.indexOf("AlternateResourceName");
 	const additionalMetaDataIndexData = dataKeys.indexOf("MetadataAuthority");
 	const alternateNoIndexData = dataKeys.indexOf("AlternateNo.");
@@ -109,7 +109,8 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 			...Object.keys(additionalData.additionalAlternateTitlesData),
 			...Object.keys(additionalData.additionalAssociatedOrgsData),
 			...Object.keys(additionalData.additionalMetadataAuthoritiesData),
-			...metadataKeys.slice(additionalMetaDataIndexData + 1, actorDataIndex),
+			...metadataKeys.slice(additionalMetaDataIndexData + 1, directorDataIndex),
+			...Object.keys(additionalData.additionalDirectorsData),
 			...Object.keys(additionalData.additionalActorsData),
 			...Object.keys(additionalData.additionalDataIDKeys),
 			...metadataKeys.slice(dataAlternateIndex + 1),
@@ -126,7 +127,8 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 				alternateNoIndexData
 			),
 			...Object.keys(additionalData.additionalAlternateNumbersData),
-			...metadataKeys.slice(alternateNoIndexData + 1, actorDataIndex),
+			...metadataKeys.slice(alternateNoIndexData + 1, directorDataIndex),
+			...Object.keys(additionalData.additionalDirectorsData),
 			...Object.keys(additionalData.additionalActorsData),
 			...Object.keys(additionalData.additionalDataIDKeys),
 			...metadataKeys.slice(dataAlternateIndex + 1),
@@ -139,7 +141,8 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 			...Object.keys(additionalData.additionalCountriesData),
 			...Object.keys(additionalData.additionalAssociatedOrgsData),
 			...Object.keys(additionalData.additionalMetadataAuthoritiesData),
-			...metadataKeys.slice(additionalMetaDataIndexData + 1, actorDataIndex),
+			...metadataKeys.slice(additionalMetaDataIndexData + 1, directorDataIndex),
+			...Object.keys(additionalData.additionalDirectorsData),
 			...Object.keys(additionalData.additionalActorsData),
 			...Object.keys(additionalData.additionalDataIDKeys),
 			...metadataKeys.slice(dataAlternateIndex + 1),

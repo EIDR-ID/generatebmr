@@ -11,6 +11,7 @@ const generateAdditionalData = (maxHeaders) => {
 
 	const additionalOriginalLanguageData = {};
 	const additionalAlternateNumbersData = {};
+	const additionalDirectorsData = {};
 
 	for (let i = 1; i <= maxHeaders.maxAltIDs; i++) {
 		// Append new Alt ID, Domain.
@@ -58,6 +59,10 @@ const generateAdditionalData = (maxHeaders) => {
 		additionalAlternateNumbersData[`Alternate No. Domain ${i}`] = "";
 	}
 
+	for (let i = 1; i <= maxHeaders.maxDirectors; i++) {
+		additionalDirectorsData[`Director ${i}`] = "";
+	}
+
 	return {
 		additionalDataIDKeys,
 		additionalActorsData,
@@ -70,6 +75,8 @@ const generateAdditionalData = (maxHeaders) => {
 		additionalMadeForRegionData,
 		additionalOriginalLanguageData,
 		additionalAlternateNumbersData,
+		additionalActorsData,
+		additionalDirectorsData,
 	};
 };
 

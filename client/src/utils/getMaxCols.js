@@ -10,6 +10,7 @@ const getMaxCols = (xmlArray) => {
 	let maxMadeForRegion = 1;
 	let maxOriginalLanguage = 1;
 	let maxAlternateNumbers = 1;
+	let maxDirectors = 1;
 	xmlArray.forEach((xml) => {
 		const altIDs = xml.getElementsByTagName("AlternateID");
 		if (altIDs.length > maxAltIDs) {
@@ -55,6 +56,10 @@ const getMaxCols = (xmlArray) => {
 		if (alternateNumbers.length > maxAlternateNumbers) {
 			maxAlternateNumbers = alternateNumbers.length;
 		}
+		const directors = xml.getElementsByTagName("Director");
+		if (directors.length > maxDirectors) {
+			maxDirectors = directors.length;
+		}
 	});
 	return {
 		maxAltIDs,
@@ -68,6 +73,7 @@ const getMaxCols = (xmlArray) => {
 		maxMadeForRegion,
 		maxOriginalLanguage,
 		maxAlternateNumbers,
+		maxDirectors,
 	};
 };
 
