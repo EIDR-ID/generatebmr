@@ -42,9 +42,9 @@ const App = () => {
 	const [selectedOption, setSelectedOption] = useState("sandbox1");
 	const [loginError, setLoginError] = useState("");
 	const [loginInfo, setLoginInfo] = useState({
-		username: "10.5238/mli",
-		password: "hknnB{gGhWZg",
-		partyID: "10.5237/9241-BC57",
+		username: "",
+		password: "",
+		partyID: "",
 	});
 	useEffect(() => {
 		const getUser = async () => {
