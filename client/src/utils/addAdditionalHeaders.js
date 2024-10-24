@@ -14,6 +14,7 @@ const addDataKeys = (maxHeaders) => {
 		maxDirectors,
 		maxSeasonClass,
 		maxEpisodeClass,
+		maxVersionLanguage,
 	} = maxHeaders;
 	const additionalIDKeys = {};
 	const additionalActors = {};
@@ -31,6 +32,7 @@ const addDataKeys = (maxHeaders) => {
 
 	const additionalSeasonClass = {};
 	const additionalEpisodeClass = {};
+	const additionalVersionLanguage = {};
 
 	// Don't run if you don't need any more columns than given already.
 	for (let i = 1; i <= maxAltIDs; i++) {
@@ -104,6 +106,12 @@ const addDataKeys = (maxHeaders) => {
 	for (let i = 1; i <= maxEpisodeClass; i++) {
 		additionalEpisodeClass[`Episode Class ${i}`] = { required: "optional" };
 	}
+	for (let i = 1; i <= maxVersionLanguage; i++) {
+		additionalVersionLanguage[`Version Language ${i}`] = {
+			required: "optional",
+		};
+		additionalVersionLanguage[`Language Mode ${i}`] = { required: "optional" };
+	}
 
 	return {
 		additionalIDKeys,
@@ -120,6 +128,7 @@ const addDataKeys = (maxHeaders) => {
 		additionalDirectors,
 		additionalSeasonClass,
 		additionalEpisodeClass,
+		additionalVersionLanguage,
 	};
 };
 

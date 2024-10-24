@@ -43,10 +43,7 @@
 		"Title Class": {
 			"required": false
 		},
-		"Version Language 1": {
-			"required": false
-		},
-		"Language Mode 1": {
+		"VersionLanguage": {
 			"required": false
 		},
 		"AlternateResourceName": {
@@ -119,8 +116,7 @@
 		"Title": "",
 		"Title Language": "",
 		"Title Class": "",
-		"Version Language 1": "",
-		"Language Mode 1": "",
+		"VersionLanguage": "",
 		"AlternateResourceName": "",
 		"AssociatedOrgs": "",
 		"MetadataAuthority": "",

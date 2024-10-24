@@ -15,6 +15,7 @@ const generateAdditionalData = (maxHeaders) => {
 
 	const additionalSeasonClassData = {};
 	const additionalEpisodeClassData = {};
+	const additionalVersionLanguageData = {};
 
 	for (let i = 1; i <= maxHeaders.maxAltIDs; i++) {
 		// Append new Alt ID, Domain.
@@ -73,6 +74,10 @@ const generateAdditionalData = (maxHeaders) => {
 	for (let i = 1; i <= maxHeaders.maxEpisodeClass; i++) {
 		additionalEpisodeClassData[`Episode Class ${i}`] = "";
 	}
+	for (let i = 1; i <= maxHeaders.maxVersionLanguage; i++) {
+		additionalVersionLanguageData[`Version Language ${i}`] = "";
+		additionalVersionLanguageData[`Language Mode ${i}`] = "";
+	}
 
 	return {
 		additionalDataIDKeys,
@@ -90,6 +95,7 @@ const generateAdditionalData = (maxHeaders) => {
 		additionalDirectorsData,
 		additionalSeasonClassData,
 		additionalEpisodeClassData,
+		additionalVersionLanguageData,
 	};
 };
 

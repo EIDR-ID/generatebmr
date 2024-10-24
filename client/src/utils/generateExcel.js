@@ -23,7 +23,7 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	const originalLanguageIndex = metadataKeys.indexOf("OriginalLanguage");
 	const associatedOrgIndex = metadataKeys.indexOf("AssociatedOrgs");
 	const alternateIndex = metadataKeys.indexOf("Alternate");
-	const actorIndex = metadataKeys.indexOf("Actors");
+	const versionLanguageIndex = metadataKeys.indexOf("VersionLanguage");
 	const additionalMetaDataIndex = metadataKeys.indexOf("MetadataAuthority");
 	const alternatenoIndex = metadataKeys.indexOf("AlternateNo.");
 	const seasonClassIndex = metadataKeys.indexOf("SeasonClass");
@@ -40,7 +40,8 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 			...Object.keys(additionalHeaders.additionalEditClass),
 			...Object.keys(additionalHeaders.additionalMadeForRegion),
 			...Object.keys(additionalHeaders.additionalEditDetails),
-			...metadataKeys.slice(editDetailsIndex + 1, alternateTitleIndex),
+			...metadataKeys.slice(editDetailsIndex + 1, versionLanguageIndex),
+			...Object.keys(additionalHeaders.additionalVersionLanguage),
 			...Object.keys(additionalHeaders.additionalAlternateTitles),
 			...Object.keys(additionalHeaders.additionalAssociatedOrgs),
 			...Object.keys(additionalHeaders.additionalMetadataAuthorities),
@@ -98,14 +99,13 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	// Find the index of Unique Row ID and Relation 3
 	const dataAdditionalOriginalLanguageIndex =
 		dataKeys.indexOf("OriginalLanguage");
-	const dataAssociatedOrg = dataKeys.indexOf("AssociatedOrgs");
-	const dataAlternateIndex = dataKeys.indexOf("Alternate");
+	const versionLanguageIndexData = dataKeys.indexOf("VersionLanguage");
 	const directorDataIndex = dataKeys.indexOf("Directors");
-	const alternateTitleDataIndex = dataKeys.indexOf("AlternateResourceName");
 	const additionalMetaDataIndexData = dataKeys.indexOf("MetadataAuthority");
 	const alternateNoIndexData = dataKeys.indexOf("AlternateNo.");
 	const seasonClassDataIndex = dataKeys.indexOf("SeasonClass");
 	const episodeClassDataIndex = dataKeys.indexOf("EpisodeClass");
+	const dataAlternateIndex = dataKeys.indexOf("Alternate");
 	let newData = [];
 	// Compose newMetadata
 	if (templateFormat === editTemplateFormat) {
@@ -116,7 +116,8 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 			...Object.keys(additionalData.additionalEditClassData),
 			...Object.keys(additionalData.additionalMadeForRegionData),
 			...Object.keys(additionalData.additionalEditDetailsData),
-			...metadataKeys.slice(editDetailsDataIndex + 1, alternateTitleDataIndex),
+			...metadataKeys.slice(editDetailsDataIndex + 1, versionLanguageIndexData),
+			...Object.keys(additionalData.additionalVersionLanguageData),
 			...Object.keys(additionalData.additionalAlternateTitlesData),
 			...Object.keys(additionalData.additionalAssociatedOrgsData),
 			...Object.keys(additionalData.additionalMetadataAuthoritiesData),

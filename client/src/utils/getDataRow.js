@@ -77,10 +77,38 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 					row.push("");
 					row.push("");
 				}
-			} else if (key === "Version Language 1") {
-				if (baseObjectData.getElementsByTagName("VersionLanguage").length > 0) {
-					const versionLanguageElement =
-						baseObjectData.getElementsByTagName("VersionLanguage")[0];
+			} else if (/^Season Class \d+$/.test(key)) {
+				const seasonClassIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the season class number and convert to zero-based index
+				const seasonClasses =
+					baseObjectData.getElementsByTagName("SeasonClass");
+				if (seasonClasses.length > seasonClassIndex) {
+					const seasonClassElement = seasonClasses[seasonClassIndex];
+					const value = seasonClassElement
+						? seasonClassElement.textContent
+						: "";
+					row.push(value);
+				} else {
+					row.push("");
+				}
+			} else if (/^Episode Class \d+$/.test(key)) {
+				const episodeClassIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the episode class number and convert to zero-based index
+				const episodeClasses =
+					baseObjectData.getElementsByTagName("EpisodeClass");
+				if (episodeClasses.length > episodeClassIndex) {
+					const episodeClassElement = episodeClasses[episodeClassIndex];
+					const value = episodeClassElement
+						? episodeClassElement.textContent
+						: "";
+					row.push(value);
+				} else {
+					row.push("");
+				}
+			} else if (/^Version Language \d+$/.test(key)) {
+				const versionLanguageIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the version language number and convert to zero-based index
+				const versionLanguages =
+					baseObjectData.getElementsByTagName("VersionLanguage");
+				if (versionLanguages.length > versionLanguageIndex) {
+					const versionLanguageElement = versionLanguages[versionLanguageIndex];
 					const mode = versionLanguageElement
 						? versionLanguageElement.getAttribute("mode")
 						: "";
@@ -230,8 +258,8 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 					row.push(value);
 					row.push(domain);
 				} else {
-					row.push("Found");
-					row.push("Domain");
+					row.push("");
+					row.push("");
 				}
 			} else {
 				if (foundElements.length > 0) {
