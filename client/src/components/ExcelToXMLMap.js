@@ -63,8 +63,6 @@ const excelToXMLMap = {
 	"Dist. No. Domain": "DistNoDomain",
 	"House No.": "md:HouseSequence",
 	"House No. Domain": "HouseNoDomain",
-	"Alternate No. 1": "AlternateNo1",
-	"Alt. No. Domain 1": "AltNoDomain1",
 	Registrant: "Registrant",
 	IMDb: "IMDb",
 	ISAN: "ISAN",

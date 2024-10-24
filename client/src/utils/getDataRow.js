@@ -9,7 +9,7 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 
 		dataKeys.forEach((key) => {
 			const skipPattern =
-				/^(Domain|Relation|Party ID|Role|Alt Title Language|Alt Title Class) \d+$/;
+				/^(Domain|Relation|Party ID|Role|Alt Title Language|Alt Title Class|Metadata Authority Party ID|Edit Domain|Language Mode|Alternate No. Domain) \d+$/;
 			if (skipPattern.test(key)) {
 				return;
 			}
@@ -37,43 +37,21 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 								.textContent
 						: "";
 				row.push(value);
-			} else if (key === "Edit Class 1") {
+			} else if (/^Edit Class \d+$/.test(key)) {
+				const editClassIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the edit class number and convert to zero-based index
+				const editClasses = baseObjectData.getElementsByTagName("EditClass");
 				value =
-					baseObjectData.getElementsByTagName("EditClass").length > 0
-						? baseObjectData.getElementsByTagName("EditClass")[0].textContent
+					editClasses.length > editClassIndex
+						? editClasses[editClassIndex].textContent
 						: "";
 				row.push(value);
-			} else if (key === "Edit Class 2") {
+			} else if (/^Made for Region \d+$/.test(key)) {
+				const regionIndex = parseInt(key.split(" ")[3], 10) - 1; // Extract the region number and convert to zero-based index
+				const madeForRegions =
+					baseObjectData.getElementsByTagName("MadeForRegion");
 				value =
-					baseObjectData.getElementsByTagName("EditClass").length > 1
-						? baseObjectData.getElementsByTagName("EditClass")[1].textContent
-						: "";
-				row.push(value);
-			} else if (key === "Edit Class 3") {
-				value =
-					baseObjectData.getElementsByTagName("EditClass").length > 2
-						? baseObjectData.getElementsByTagName("EditClass")[2].textContent
-						: "";
-				row.push(value);
-			} else if (key === "Made for Region 1") {
-				value =
-					baseObjectData.getElementsByTagName("MadeForRegion").length > 0
-						? baseObjectData.getElementsByTagName("MadeForRegion")[0]
-								.textContent
-						: "";
-				row.push(value);
-			} else if (key === "Made for Region 2") {
-				value =
-					baseObjectData.getElementsByTagName("MadeForRegion").length > 1
-						? baseObjectData.getElementsByTagName("MadeForRegion")[1]
-								.textContent
-						: "";
-				row.push(value);
-			} else if (key === "Made for Region 3") {
-				value =
-					baseObjectData.getElementsByTagName("MadeForRegion").length > 2
-						? baseObjectData.getElementsByTagName("MadeForRegion")[2]
-								.textContent
+					madeForRegions.length > regionIndex
+						? madeForRegions[regionIndex].textContent
 						: "";
 				row.push(value);
 			} else if (key === "Assigned EIDR ID") {
@@ -82,10 +60,11 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 						? baseObjectData.getElementsByTagName("ID")[0].textContent
 						: "";
 				row.push(value);
-			} else if (key === "Edit Details 1") {
-				if (baseObjectData.getElementsByTagName("EditDetails").length > 0) {
-					const editDetailsElement =
-						baseObjectData.getElementsByTagName("EditDetails")[0];
+			} else if (/^Edit Details \d+$/.test(key)) {
+				const editDetailsIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the edit details number and convert to zero-based index
+				const editDetails = baseObjectData.getElementsByTagName("EditDetails");
+				if (editDetails.length > editDetailsIndex) {
+					const editDetailsElement = editDetails[editDetailsIndex];
 					const domain = editDetailsElement
 						? editDetailsElement.getAttribute("domain")
 						: "";
@@ -98,10 +77,38 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 					row.push("");
 					row.push("");
 				}
-			} else if (key === "Version Language 1") {
-				if (baseObjectData.getElementsByTagName("VersionLanguage").length > 0) {
-					const versionLanguageElement =
-						baseObjectData.getElementsByTagName("VersionLanguage")[0];
+			} else if (/^Season Class \d+$/.test(key)) {
+				const seasonClassIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the season class number and convert to zero-based index
+				const seasonClasses =
+					baseObjectData.getElementsByTagName("SeasonClass");
+				if (seasonClasses.length > seasonClassIndex) {
+					const seasonClassElement = seasonClasses[seasonClassIndex];
+					const value = seasonClassElement
+						? seasonClassElement.textContent
+						: "";
+					row.push(value);
+				} else {
+					row.push("");
+				}
+			} else if (/^Episode Class \d+$/.test(key)) {
+				const episodeClassIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the episode class number and convert to zero-based index
+				const episodeClasses =
+					baseObjectData.getElementsByTagName("EpisodeClass");
+				if (episodeClasses.length > episodeClassIndex) {
+					const episodeClassElement = episodeClasses[episodeClassIndex];
+					const value = episodeClassElement
+						? episodeClassElement.textContent
+						: "";
+					row.push(value);
+				} else {
+					row.push("");
+				}
+			} else if (/^Version Language \d+$/.test(key)) {
+				const versionLanguageIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the version language number and convert to zero-based index
+				const versionLanguages =
+					baseObjectData.getElementsByTagName("VersionLanguage");
+				if (versionLanguages.length > versionLanguageIndex) {
+					const versionLanguageElement = versionLanguages[versionLanguageIndex];
 					const mode = versionLanguageElement
 						? versionLanguageElement.getAttribute("mode")
 						: "";
@@ -114,12 +121,12 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 					row.push("");
 					row.push("");
 				}
-			} else if (key === "Original Language 1") {
-				if (
-					baseObjectData.getElementsByTagName("OriginalLanguage").length > 0
-				) {
-					const originalLanguageElement =
-						baseObjectData.getElementsByTagName("OriginalLanguage")[0];
+			} else if (/^Original Language \d+$/.test(key)) {
+				const languageIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the language number and convert to zero-based index
+				const originalLanguages =
+					baseObjectData.getElementsByTagName("OriginalLanguage");
+				if (originalLanguages.length > languageIndex) {
+					const originalLanguageElement = originalLanguages[languageIndex];
 					const mode = originalLanguageElement
 						? originalLanguageElement.getAttribute("mode")
 						: "";
@@ -221,6 +228,36 @@ const getDataRow = (xmlDoc, dataKeys, idx) => {
 					row.push(relation);
 				} else {
 					row.push("");
+					row.push("");
+					row.push("");
+				}
+			} else if (/^Metadata Authority \d+$/.test(key)) {
+				const metadataAuthorityIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the metadata authority number and convert to zero-based index
+				const metadataAuthorities =
+					baseObjectData.getElementsByTagName("MetadataAuthority");
+				if (metadataAuthorities.length > metadataAuthorityIndex) {
+					const metadataAuthorityElement =
+						metadataAuthorities[metadataAuthorityIndex];
+					const value = metadataAuthorityElement
+						? metadataAuthorityElement.textContent
+						: "";
+					row.push("");
+					row.push(value);
+				} else {
+					row.push("");
+					row.push("");
+				}
+			} else if (/^Alternate No. \d+$/.test(key)) {
+				const alternateNoIndex = parseInt(key.split(" ")[2], 10) - 1; // Extract the alternate number and convert to zero-based index
+				const alternateNumbers =
+					baseObjectData.getElementsByTagName("md:AlternateNumber");
+				if (alternateNumbers.length > alternateNoIndex) {
+					const alternateNumberElement = alternateNumbers[alternateNoIndex];
+					const domain = alternateNumberElement.getAttribute("domain") || "";
+					const value = alternateNumberElement.textContent || "";
+					row.push(value);
+					row.push(domain);
+				} else {
 					row.push("");
 					row.push("");
 				}

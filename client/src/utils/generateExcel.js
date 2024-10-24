@@ -4,93 +4,86 @@ import nonepisodicTemplate from "../assets/nonepisodictemplate.json";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import unknowntemplate from "../assets/unknowntemplate.json";
+import getMaxCols from "./getMaxCols.js";
 import getDataRow from "./getDataRow.js";
+import addAdditionalHeaders from "./addAdditionalHeaders.js";
+import generateAdditionalData from "./addAdditionalData.js";
 const generateExcel = (type, xmlArray, templateFormat) => {
 	// Prepare Excel data
 	const rows = [];
 	rows.push(["version:", "22"]); // Assuming version is static as per the requirement
-	let maxAltIDs = 1; // Maximum number of AltIDs
-	let maxActors = 1;
-	let maxAssociatedOrgs = 1;
-	let maxAlternateTitles = 2;
-	let maxCountryOfOrigin = 1;
-	// Loop through xmlArray to determine the maximum number of Alt IDs
-	xmlArray.forEach((xml) => {
-		const altIDs = xml.getElementsByTagName("AlternateID");
-		if (altIDs.length > maxAltIDs) {
-			maxAltIDs = altIDs.length;
-		}
-		const actors = xml.getElementsByTagName("Actor");
-		if (actors.length > maxActors) {
-			maxActors = actors.length;
-		}
-		const associatedOrgs = xml.getElementsByTagName("AssociatedOrg");
-		if (associatedOrgs.length > maxAssociatedOrgs) {
-			maxAssociatedOrgs = associatedOrgs.length;
-		}
-		const alternateTitles = xml.getElementsByTagName("AlternateResourceName");
-		if (alternateTitles.length > maxAlternateTitles) {
-			maxAlternateTitles = alternateTitles.length;
-		}
-		const countryOfOrigin = xml.getElementsByTagName("CountryOfOrigin");
-		if (countryOfOrigin.length > maxCountryOfOrigin) {
-			maxCountryOfOrigin = countryOfOrigin.length;
-		}
-	});
+
+	let maxHeaders = getMaxCols(xmlArray);
 
 	const metadataKeys = Object.keys(templateFormat.metadata);
 	// console.log("Metadata Keys: ", metadataKeys);
-	const additionalIDKeys = {};
-	const additionalActors = {};
-	const additionalAssociatedOrgs = {};
-	const additionalAlternateTitles = {};
-	const additionalCountries = {};
-	//Don't run if you don't need any more columns than given already.
-	for (let i = 1; i <= maxAltIDs; i++) {
-		additionalIDKeys[`Alt ID ${i}`] = { required: "optional" };
-		additionalIDKeys[`Domain ${i}`] = { required: "optional" };
-		additionalIDKeys[`Relation ${i}`] = { required: "optional" };
-	}
-	for (let i = 1; i <= maxActors; i++) {
-		additionalActors[`Actor ${i}`] = { required: "optional" };
-	}
-	for (let i = 1; i <= maxAssociatedOrgs; i++) {
-		additionalAssociatedOrgs[`Associated Org ${i}`] = { required: "optional" };
-		additionalAssociatedOrgs[`Role ${i}`] = { required: "optional" };
-		additionalAssociatedOrgs[`Party ID ${i}`] = { required: "optional" };
-	}
-	for (let i = 1; i <= maxAlternateTitles; i++) {
-		additionalAlternateTitles[`Alternate Title ${i}`] = {
-			required: "optional",
-		};
-		additionalAlternateTitles[`Alt Title Language ${i}`] = {
-			required: "optional",
-		};
-		additionalAlternateTitles[`Alt Title Class ${i}`] = {
-			required: "optional",
-		};
-	}
-	for (let i = 1; i <= maxCountryOfOrigin; i++) {
-		additionalCountries[`Country of Origin ${i}`] = { required: "optional" };
-	}
-
+	const additionalHeaders = addAdditionalHeaders(maxHeaders);
 	// Find the index of Unique Row ID and Relation 3
 	const alternateTitleIndex = metadataKeys.indexOf("AlternateResourceName");
+	const originalLanguageIndex = metadataKeys.indexOf("OriginalLanguage");
 	const associatedOrgIndex = metadataKeys.indexOf("AssociatedOrgs");
 	const alternateIndex = metadataKeys.indexOf("Alternate");
-	const actorIndex = metadataKeys.indexOf("Actors");
+	const versionLanguageIndex = metadataKeys.indexOf("VersionLanguage");
+	const additionalMetaDataIndex = metadataKeys.indexOf("MetadataAuthority");
+	const alternatenoIndex = metadataKeys.indexOf("AlternateNo.");
+	const seasonClassIndex = metadataKeys.indexOf("SeasonClass");
+	const episodeClassIndex = metadataKeys.indexOf("EpisodeClass");
+	const directorIndex = metadataKeys.indexOf("Directors");
 
 	// Compose newMetadata
-	const newMetadata = [
-		...metadataKeys.slice(0, alternateTitleIndex),
-		...Object.keys(additionalAlternateTitles),
-		...Object.keys(additionalCountries),
-		...Object.keys(additionalAssociatedOrgs),
-		...metadataKeys.slice(associatedOrgIndex + 1, actorIndex),
-		...Object.keys(additionalActors),
-		...Object.keys(additionalIDKeys),
-		...metadataKeys.slice(alternateIndex + 1),
-	];
+	let newMetadata = [];
+	if (templateFormat === editTemplateFormat) {
+		const editClassIndex = metadataKeys.indexOf("EditClass");
+		const editDetailsIndex = metadataKeys.indexOf("EditDetails");
+		newMetadata = [
+			...metadataKeys.slice(0, editClassIndex),
+			...Object.keys(additionalHeaders.additionalEditClass),
+			...Object.keys(additionalHeaders.additionalMadeForRegion),
+			...Object.keys(additionalHeaders.additionalEditDetails),
+			...metadataKeys.slice(editDetailsIndex + 1, versionLanguageIndex),
+			...Object.keys(additionalHeaders.additionalVersionLanguage),
+			...Object.keys(additionalHeaders.additionalAlternateTitles),
+			...Object.keys(additionalHeaders.additionalAssociatedOrgs),
+			...Object.keys(additionalHeaders.additionalMetadataAuthorities),
+			...metadataKeys.slice(additionalMetaDataIndex + 1, directorIndex),
+			...Object.keys(additionalHeaders.additionalDirectors),
+			...Object.keys(additionalHeaders.additionalActors),
+			...Object.keys(additionalHeaders.additionalIDKeys),
+			...metadataKeys.slice(alternateIndex + 1),
+		];
+	} else if (templateFormat === episodicTemplate) {
+		newMetadata = [
+			...metadataKeys.slice(0, originalLanguageIndex),
+			...Object.keys(additionalHeaders.additionalOriginalLanguages),
+			...Object.keys(additionalHeaders.additionalAlternateTitles),
+			...Object.keys(additionalHeaders.additionalAssociatedOrgs),
+			...Object.keys(additionalHeaders.additionalMetadataAuthorities),
+			...metadataKeys.slice(additionalMetaDataIndex + 1, seasonClassIndex),
+			...Object.keys(additionalHeaders.additionalSeasonClass),
+			...Object.keys(additionalHeaders.additionalEpisodeClass),
+			...metadataKeys.slice(episodeClassIndex + 1, alternatenoIndex),
+			...Object.keys(additionalHeaders.additionalAlternateNumbers),
+			...metadataKeys.slice(alternatenoIndex + 1, directorIndex),
+			...Object.keys(additionalHeaders.additionalDirectors),
+			...Object.keys(additionalHeaders.additionalActors),
+			...Object.keys(additionalHeaders.additionalIDKeys),
+			...metadataKeys.slice(alternateIndex + 1),
+		];
+	} else {
+		newMetadata = [
+			...metadataKeys.slice(0, originalLanguageIndex),
+			...Object.keys(additionalHeaders.additionalOriginalLanguages),
+			...Object.keys(additionalHeaders.additionalAlternateTitles),
+			...Object.keys(additionalHeaders.additionalCountries),
+			...Object.keys(additionalHeaders.additionalAssociatedOrgs),
+			...Object.keys(additionalHeaders.additionalMetadataAuthorities),
+			...metadataKeys.slice(associatedOrgIndex + 1, directorIndex),
+			...Object.keys(additionalHeaders.additionalDirectors),
+			...Object.keys(additionalHeaders.additionalActors),
+			...Object.keys(additionalHeaders.additionalIDKeys),
+			...metadataKeys.slice(alternateIndex + 1),
+		];
+	}
 
 	const metadataRequired = newMetadata.map((key) => {
 		if (templateFormat.metadata[key]?.required === "TBD") {
@@ -100,53 +93,76 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 	});
 	// rows.push(newMetadata); // Third row: keys from metadata
 	rows.push(metadataRequired); // Second row: required or optional
-
 	// Data keys and their values
 	const dataKeys = Object.keys(templateFormat.data);
-	const additionalDataIDKeys = {};
-	const additionalActorsData = {};
-	const additionalAssociatedOrgsData = {};
-	const additionalAlternateTitlesData = {};
-	const additionalCountriesData = {};
-	for (let i = 1; i <= maxAltIDs; i++) {
-		//Append new Alt ID, Domain.
-		additionalDataIDKeys[`Alt ID ${i}`] = "";
-		additionalDataIDKeys[`Domain ${i}`] = "";
-		additionalDataIDKeys[`Relation ${i}`] = "";
-	}
-	for (let i = 1; i <= maxActors; i++) {
-		additionalActorsData[`Actor ${i}`] = "";
-	}
-	for (let i = 1; i <= maxAssociatedOrgs; i++) {
-		additionalAssociatedOrgsData[`Associated Org ${i}`] = "";
-		additionalAssociatedOrgsData[`Role ${i}`] = "";
-		additionalAssociatedOrgsData[`Party ID ${i}`] = "";
-	}
-	for (let i = 1; i <= maxAlternateTitles; i++) {
-		additionalAlternateTitlesData[`Alternate Title ${i}`] = "";
-		additionalAlternateTitlesData[`Alt Title Language ${i}`] = "";
-		additionalAlternateTitlesData[`Alt Title Class ${i}`] = "";
-	}
-	for (let i = 1; i <= maxCountryOfOrigin; i++) {
-		additionalCountriesData[`Country of Origin ${i}`] = "";
-	}
+	const additionalData = generateAdditionalData(maxHeaders);
 	// Find the index of Unique Row ID and Relation 3
-	const dataAssociatedOrg = dataKeys.indexOf("AssociatedOrgs");
+	const dataAdditionalOriginalLanguageIndex =
+		dataKeys.indexOf("OriginalLanguage");
+	const versionLanguageIndexData = dataKeys.indexOf("VersionLanguage");
+	const directorDataIndex = dataKeys.indexOf("Directors");
+	const additionalMetaDataIndexData = dataKeys.indexOf("MetadataAuthority");
+	const alternateNoIndexData = dataKeys.indexOf("AlternateNo.");
+	const seasonClassDataIndex = dataKeys.indexOf("SeasonClass");
+	const episodeClassDataIndex = dataKeys.indexOf("EpisodeClass");
 	const dataAlternateIndex = dataKeys.indexOf("Alternate");
-	const actorDataIndex = dataKeys.indexOf("Actors");
-	const alternateTitleDataIndex = dataKeys.indexOf("AlternateResourceName");
-
+	let newData = [];
 	// Compose newMetadata
-	const newData = [
-		...metadataKeys.slice(0, alternateTitleDataIndex),
-		...Object.keys(additionalAlternateTitlesData),
-		...Object.keys(additionalCountriesData),
-		...Object.keys(additionalAssociatedOrgsData),
-		...metadataKeys.slice(dataAssociatedOrg + 1, actorDataIndex),
-		...Object.keys(additionalActorsData),
-		...Object.keys(additionalDataIDKeys),
-		...metadataKeys.slice(dataAlternateIndex + 1),
-	];
+	if (templateFormat === editTemplateFormat) {
+		const editClassDataIndex = dataKeys.indexOf("EditClass");
+		const editDetailsDataIndex = dataKeys.indexOf("EditDetails");
+		newData = [
+			...metadataKeys.slice(0, editClassDataIndex),
+			...Object.keys(additionalData.additionalEditClassData),
+			...Object.keys(additionalData.additionalMadeForRegionData),
+			...Object.keys(additionalData.additionalEditDetailsData),
+			...metadataKeys.slice(editDetailsDataIndex + 1, versionLanguageIndexData),
+			...Object.keys(additionalData.additionalVersionLanguageData),
+			...Object.keys(additionalData.additionalAlternateTitlesData),
+			...Object.keys(additionalData.additionalAssociatedOrgsData),
+			...Object.keys(additionalData.additionalMetadataAuthoritiesData),
+			...metadataKeys.slice(additionalMetaDataIndexData + 1, directorDataIndex),
+			...Object.keys(additionalData.additionalDirectorsData),
+			...Object.keys(additionalData.additionalActorsData),
+			...Object.keys(additionalData.additionalDataIDKeys),
+			...metadataKeys.slice(dataAlternateIndex + 1),
+		];
+	} else if (templateFormat === episodicTemplate) {
+		newData = [
+			...metadataKeys.slice(0, dataAdditionalOriginalLanguageIndex),
+			...Object.keys(additionalData.additionalOriginalLanguageData),
+			...Object.keys(additionalData.additionalAlternateTitlesData),
+			...Object.keys(additionalData.additionalAssociatedOrgsData),
+			...Object.keys(additionalData.additionalMetadataAuthoritiesData),
+			...metadataKeys.slice(
+				additionalMetaDataIndexData + 1,
+				seasonClassDataIndex
+			),
+			...Object.keys(additionalData.additionalSeasonClassData),
+			...Object.keys(additionalData.additionalEpisodeClassData),
+			...metadataKeys.slice(episodeClassDataIndex + 1, alternateNoIndexData),
+			...Object.keys(additionalData.additionalAlternateNumbersData),
+			...metadataKeys.slice(alternateNoIndexData + 1, directorDataIndex),
+			...Object.keys(additionalData.additionalDirectorsData),
+			...Object.keys(additionalData.additionalActorsData),
+			...Object.keys(additionalData.additionalDataIDKeys),
+			...metadataKeys.slice(dataAlternateIndex + 1),
+		];
+	} else {
+		newData = [
+			...metadataKeys.slice(0, dataAdditionalOriginalLanguageIndex),
+			...Object.keys(additionalData.additionalOriginalLanguageData),
+			...Object.keys(additionalData.additionalAlternateTitlesData),
+			...Object.keys(additionalData.additionalCountriesData),
+			...Object.keys(additionalData.additionalAssociatedOrgsData),
+			...Object.keys(additionalData.additionalMetadataAuthoritiesData),
+			...metadataKeys.slice(additionalMetaDataIndexData + 1, directorDataIndex),
+			...Object.keys(additionalData.additionalDirectorsData),
+			...Object.keys(additionalData.additionalActorsData),
+			...Object.keys(additionalData.additionalDataIDKeys),
+			...metadataKeys.slice(dataAlternateIndex + 1),
+		];
+	}
 
 	const updatedDataKeyValuePairs = {};
 	newData.forEach((key) => {
