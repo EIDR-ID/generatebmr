@@ -77,7 +77,7 @@ const generateExcel = (type, xmlArray, templateFormat) => {
 			...Object.keys(additionalHeaders.additionalCountries),
 			...Object.keys(additionalHeaders.additionalAssociatedOrgs),
 			...Object.keys(additionalHeaders.additionalMetadataAuthorities),
-			...metadataKeys.slice(associatedOrgIndex + 1, directorIndex),
+			...metadataKeys.slice(additionalMetaDataIndex + 1, directorIndex),
 			...Object.keys(additionalHeaders.additionalDirectors),
 			...Object.keys(additionalHeaders.additionalActors),
 			...Object.keys(additionalHeaders.additionalIDKeys),
